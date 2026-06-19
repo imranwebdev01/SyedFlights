@@ -1,2 +1,14 @@
 # SyedFlights
-Learn how to create a fully responsive Tour &amp; Travel website design from scratch using HTML, CSS, and JavaScript!
+
+A modern airline booking and travel website built using HTML, CSS, and JavaScript.
+
+## Features
+- Responsive Design
+- Flight Information
+- Contact Section
+- Modern User Interface
+
+## Technologies Used
+- HTML5
+- CSS3
+- JavaScript
