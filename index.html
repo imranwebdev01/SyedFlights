@@ -1,0 +1,474 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- FIX 1: Updated title tag - removed "Web Design Mastery" -->
+    <title>SyedFlights | Travel & Flight Booking</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+
+    <!-- ✅ NAVBAR -->
+    <nav>
+      <div class="nav__header">
+        <div class="nav__logo">
+          <!-- FIX 2: Added aria-label to logo link -->
+          <a href="#home" class="logo" aria-label="SyedFlights Home">SyedFlights <i class="ri-flight-takeoff-line logo__icon"></i></a>
+        </div>
+        <div class="nav__menu__btn" id="menu-btn" aria-label="Toggle Menu" role="button" tabindex="0">
+          <i class="ri-menu-line"></i>
+        </div>
+      </div>
+      <ul class="nav__links" id="nav-links">
+        <!-- FIX 3: All nav links now point to correct section IDs -->
+        <li><a href="#home">HOME</a></li>
+        <li><a href="#about">ABOUT</a></li>
+        <li><a href="#tour">TOUR</a></li>
+        <li><a href="#package">PACKAGE</a></li>
+        <li><a href="#contact">CONTACT</a></li>
+        <li><a href="#contact">BOOK TRIP</a></li>
+      </ul>
+      <div class="nav__btns">
+        <button class="btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">BOOK TRIP</button>
+      </div>
+    </nav>
+
+    <!-- ✅ HERO HEADER -->
+    <header id="home">
+      <div class="header__container">
+        <div class="header__content">
+          <p>ELEVATE YOUR TRAVEL JOURNEY</p>
+          <h1>Experience The Magic Of Flight!</h1>
+          <div class="header__btns">
+            <button class="btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Book A Trip Now</button>
+            <a href="#tour" aria-label="Watch how it works">
+              <span><i class="ri-play-circle-fill"></i></span>
+            </a>
+          </div>
+        </div>
+        <div class="header__image">
+          <img src="assets/header.png" alt="Airplane flying in the sky" />
+        </div>
+      </div>
+    </header>
+
+    <!-- ✅ POPULAR DESTINATIONS — FIX 4: Renamed section id to match nav correctly -->
+    <section class="section__container destination__container" id="about">
+      <h2 class="section__header">Popular Destinations</h2>
+      <p class="section__description">
+        Discover the Most Loved Destinations Around the Globe
+      </p>
+      <div class="destination__grid">
+        <div class="destination__card">
+          <img src="assets/destination-1.jpg" alt="New York City skyline" />
+          <div class="destination__card__details">
+            <div>
+              <h4>Tradition and Futurism</h4>
+              <p>New York City, USA</p>
+            </div>
+            <div class="destination__rating">
+              <span><i class="ri-star-fill"></i></span>
+              4.7
+            </div>
+          </div>
+        </div>
+        <div class="destination__card">
+          <img src="assets/destination-2.jpg" alt="Eiffel Tower in Paris" />
+          <div class="destination__card__details">
+            <div>
+              <h4>The City of Lights</h4>
+              <p>Paris, France</p>
+            </div>
+            <div class="destination__rating">
+              <span><i class="ri-star-fill"></i></span>
+              4.5
+            </div>
+          </div>
+        </div>
+        <div class="destination__card">
+          <img src="assets/destination-3.jpg" alt="Bali temple and tropical scenery" />
+          <div class="destination__card__details">
+            <div>
+              <h4>Island of the Gods</h4>
+              <p>Bali, Indonesia</p>
+            </div>
+            <div class="destination__rating">
+              <span><i class="ri-star-fill"></i></span>
+              4.8
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ✅ JOURNEY / HOW IT WORKS -->
+    <section class="section__container journey__container" id="tour">
+      <h2 class="section__header">Journey To The Sky Made Simple!</h2>
+      <p class="section__description">
+        Effortless Planning for Your Next Adventure
+      </p>
+      <div class="journey__grid">
+        <div class="journey__card">
+          <div class="journey__card__bg">
+            <span><i class="ri-bookmark-3-line"></i></span>
+            <h4>Seamless Booking Process</h4>
+          </div>
+          <div class="journey__card__content">
+            <span><i class="ri-bookmark-3-line"></i></span>
+            <h4>Easy Reservations, One Click Away</h4>
+            <p>
+              From flights and accommodations to activities and transfers,
+              everything you need is available at your fingertips, making travel
+              planning effortless.
+            </p>
+          </div>
+        </div>
+        <div class="journey__card">
+          <div class="journey__card__bg">
+            <span><i class="ri-landscape-fill"></i></span>
+            <h4>Tailored Itineraries</h4>
+          </div>
+          <div class="journey__card__content">
+            <span><i class="ri-landscape-fill"></i></span>
+            <h4>Customized Plans Just for You</h4>
+            <p>
+              Enjoy personalized travel plans designed to match your preferences
+              and interests. Whether you seek adventure or cultural immersion,
+              our tailored itineraries ensure your journey is uniquely yours.
+            </p>
+          </div>
+        </div>
+        <div class="journey__card">
+          <div class="journey__card__bg">
+            <span><i class="ri-map-2-line"></i></span>
+            <h4>Expert Local Insights</h4>
+          </div>
+          <div class="journey__card__content">
+            <span><i class="ri-map-2-line"></i></span>
+            <h4>Insider Tips and Recommendations</h4>
+            <p>
+              We provide curated recommendations for dining, sightseeing, and
+              hidden gems, so you can experience each destination like a local.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ✅ SHOWCASE / PACKAGE -->
+    <section class="section__container showcase__container" id="package">
+      <div class="showcase__image">
+        <img src="assets/showcase.jpg" alt="Scenic travel destination viewed from above" />
+      </div>
+      <div class="showcase__content">
+        <h4>UNLEASH WANDERLUST WITH SYEDFLIGHTS</h4>
+        <p>
+          Embark on a journey like no other with SyedFlights, where your travel
+          dreams come to life. Our mission is to inspire and facilitate your
+          adventures, whether you seek the vibrant energy of bustling
+          cityscapes, the serene beauty of pristine beaches, or the captivating
+          history of ancient landmarks. At SyedFlights, we provide expertly curated
+          destinations and personalized itineraries, ensuring that every trip is
+          tailored to your unique preferences. Discover hidden gems, immerse
+          yourself in diverse cultures, and create unforgettable memories that
+          will last a lifetime.
+        </p>
+        <p>
+          With SyedFlights as your ultimate travel companion, exploring the wonders
+          of the world has never been easier. Our insider tips and local
+          insights give you the tools to navigate new places with confidence and
+          excitement. From the moment you start planning to the day you return
+          home, we are dedicated to making your travel experience seamless and
+          enriching.
+        </p>
+        <div class="showcase__btn">
+          <button class="btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
+            Book A Flight Now
+            <span><i class="ri-arrow-right-line"></i></span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ✅ STATS BANNER -->
+    <section class="section__container banner__container">
+      <div class="banner__card">
+        <h4>10+</h4>
+        <p>Years Experience</p>
+      </div>
+      <div class="banner__card">
+        <h4>12K</h4>
+        <p>Happy Clients</p>
+      </div>
+      <div class="banner__card">
+        <h4>4.8</h4>
+        <p>Overall Ratings</p>
+      </div>
+    </section>
+
+    <!-- ✅ DISCOVER -->
+    <section class="section__container discover__container">
+      <h2 class="section__header">Discover The World From Above</h2>
+      <p class="section__description">
+        Experience Breathtaking Views and Unique Perspectives
+      </p>
+      <div class="discover__grid">
+        <div class="discover__card">
+          <span><i class="ri-camera-lens-line"></i></span>
+          <h4>Aerial Cityscapes</h4>
+          <p>
+            Witness the architectural marvels and bustling streets from a
+            bird's-eye view, offering a truly unique perspective on the world below.
+          </p>
+        </div>
+        <div class="discover__card">
+          <span><i class="ri-ship-line"></i></span>
+          <h4>Coastal Wonders</h4>
+          <p>
+            Fly over pristine coastlines and turquoise waters, revealing hidden
+            coves and vibrant coral reefs that few ever get to see.
+          </p>
+        </div>
+        <div class="discover__card">
+          <span><i class="ri-landscape-line"></i></span>
+          <h4>Historic Landmarks</h4>
+          <p>
+            Observe the grandeur of ancient castles and significant sites in a
+            way that ground tours simply can't offer.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ✅ TESTIMONIALS -->
+    <section class="section__container client__container">
+      <h2 class="section__header">Loved By Over Thousand Travelers</h2>
+      <p class="section__description">
+        Discover the stories of wanderlust and cherished memories through the
+        eyes of our valued clients.
+      </p>
+      <div class="swiper">
+        <div class="swiper-wrapper">
+
+          <div class="swiper-slide">
+            <div class="client__card">
+              <div class="client__content">
+                <div class="client__rating" aria-label="5 out of 5 stars">
+                  <span><i class="ri-star-fill"></i></span>
+                  <span><i class="ri-star-fill"></i></span>
+                  <span><i class="ri-star-fill"></i></span>
+                  <span><i class="ri-star-fill"></i></span>
+                  <span><i class="ri-star-fill"></i></span>
+                </div>
+                <p>
+                  SyedFlights has completely transformed my travel experience. From
+                  finding hidden gems in bustling cities to discovering serene
+                  retreats off the beaten path, every detail was thoughtfully
+                  arranged. I can't recommend SyedFlights enough for anyone looking
+                  to elevate their travel experience!
+                </p>
+              </div>
+              <div class="client__details">
+                <img src="assets/client-1.jpg" alt="John Adams - Travel Blogger" />
+                <div>
+                  <h4>John Adams</h4>
+                  <h5>Travel Blogger</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="client__card">
+              <div class="client__content">
+                <div class="client__rating" aria-label="5 out of 5 stars">
+                  <span><i class="ri-star-fill"></i></span>
+                  <span><i class="ri-star-fill"></i></span>
+                  <span><i class="ri-star-fill"></i></span>
+                  <span><i class="ri-star-fill"></i></span>
+                  <span><i class="ri-star-fill"></i></span>
+                </div>
+                <p>
+                  My recent adventure with SyedFlights was nothing short of
+                  spectacular. The personalized itineraries and recommendations
+                  they provided led me to extraordinary locations that I would
+                  never have found on my own. I'm already planning my next
+                  adventure with them!
+                </p>
+              </div>
+              <div class="client__details">
+                <img src="assets/client-2.jpg" alt="Emily Thompson - Adventure Enthusiast" />
+                <div>
+                  <h4>Emily Thompson</h4>
+                  <h5>Adventure Enthusiast</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="client__card">
+              <div class="client__content">
+                <div class="client__rating" aria-label="5 out of 5 stars">
+                  <span><i class="ri-star-fill"></i></span>
+                  <span><i class="ri-star-fill"></i></span>
+                  <span><i class="ri-star-fill"></i></span>
+                  <span><i class="ri-star-fill"></i></span>
+                  <span><i class="ri-star-fill"></i></span>
+                </div>
+                <!-- FIX 5: Fixed broken sentence in Sarah Lee's review -->
+                <p>
+                  SyedFlights offered a transformative experience for my research
+                  into historical landmarks. The unique aerial perspectives
+                  provided a new level of appreciation and insight into the
+                  sites I studied. I highly recommend their services to fellow
+                  historians and cultural enthusiasts.
+                </p>
+              </div>
+              <div class="client__details">
+                <img src="assets/client-3.jpg" alt="Sarah Lee - Cultural Historian" />
+                <div>
+                  <h4>Sarah Lee</h4>
+                  <h5>Cultural Historian</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="swiper-slide">
+            <div class="client__card">
+              <div class="client__content">
+                <div class="client__rating" aria-label="5 out of 5 stars">
+                  <span><i class="ri-star-fill"></i></span>
+                  <span><i class="ri-star-fill"></i></span>
+                  <span><i class="ri-star-fill"></i></span>
+                  <span><i class="ri-star-fill"></i></span>
+                  <span><i class="ri-star-fill"></i></span>
+                </div>
+                <p>
+                  Finding a balance between work and travel can be challenging,
+                  but SyedFlights made it effortless. Their efficient planning and
+                  excellent recommendations helped me maximize my downtime and
+                  enjoy every moment of my trip. I look forward to working with
+                  them again on future travels.
+                </p>
+              </div>
+              <div class="client__details">
+                <img src="assets/client-4.jpg" alt="David Patel - Business Executive" />
+                <div>
+                  <h4>David Patel</h4>
+                  <h5>Business Executive</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ✅ FOOTER -->
+    <footer id="contact">
+      <div class="section__container footer__container">
+        <div class="footer__col">
+          <div class="footer__logo">
+            <a href="#home" class="logo" aria-label="SyedFlights Home">SyedFlights <i class="ri-flight-takeoff-line logo__icon"></i></a>
+          </div>
+          <p>
+            Explore the world with ease and excitement through our comprehensive
+            travel platform. Your journey begins here, where seamless planning
+            meets unforgettable experiences.
+          </p>
+          <ul class="footer__socials">
+            <li>
+              <a href="#" aria-label="Follow us on Facebook"><i class="ri-facebook-fill"></i></a>
+            </li>
+            <li>
+              <a href="#" aria-label="Follow us on Instagram"><i class="ri-instagram-line"></i></a>
+            </li>
+            <li>
+              <a href="#" aria-label="Subscribe on YouTube"><i class="ri-youtube-line"></i></a>
+            </li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Quick Links</h4>
+          <ul class="footer__links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">Destinations</a></li>
+            <li><a href="#tour">Tours</a></li>
+            <li><a href="#package">Packages</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Contact Us</h4>
+          <ul class="footer__links">
+            <li>
+              <!-- FIX 6: Phone number formatted as tel: link -->
+              <a href="tel:+923219836307">
+                <span><i class="ri-phone-fill"></i></span> +923219836307
+              </a>
+            </li>
+            <li>
+              <!-- FIX 7: Fixed email - added proper domain -->
+              <a href="mailto:info@syedflights.com">
+                <span><i class="ri-record-mail-line"></i></span> info@syedflights.com
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <span><i class="ri-map-pin-2-fill"></i></span> Pakistan,kpk ,Islamad
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Subscribe</h4>
+          <!-- FIX 8: Added email validation, prevent default, and success feedback -->
+          <form id="subscribe-form" onsubmit="handleSubscribe(event)">
+            <input type="email" id="subscribe-email" placeholder="Enter your email" required aria-label="Email address for newsletter" />
+            <button class="btn" type="submit">Subscribe</button>
+          </form>
+          <p id="subscribe-msg" style="display:none; color: #4caf50; margin-top: 8px; font-size: 0.9rem;">
+            ✅ Thank you for subscribing!
+          </p>
+        </div>
+      </div>
+      <!-- FIX 9: Footer copyright updated to your own name -->
+      <div class="footer__bar">
+        Copyright &copy; 2024 SyedFlights. All rights reserved.
+      </div>
+    </footer>
+
+    <!-- ✅ SCRIPTS -->
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="main.js"></script>
+
+    <!-- FIX 10: Subscribe form handler inline (move to main.js if preferred) -->
+    <script>
+      function handleSubscribe(e) {
+        e.preventDefault();
+        const email = document.getElementById('subscribe-email').value;
+        if (email) {
+          document.getElementById('subscribe-form').reset();
+          document.getElementById('subscribe-msg').style.display = 'block';
+          setTimeout(() => {
+            document.getElementById('subscribe-msg').style.display = 'none';
+          }, 4000);
+        }
+      }
+    </script>
+
+  </body>
+</html>
