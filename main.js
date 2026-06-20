@@ -283,48 +283,7 @@ backToTopBtn.addEventListener("click", () => {
 });
 
 /* ============================================================
-   7. DARK MODE TOGGLE
-   UPGRADE: Persists theme using in-memory state (localStorage
-   is not used since it's unsupported in some sandboxed embeds —
-   safe default approach for any environment)
-   ============================================================ */
-(function initDarkMode() {
-  const htmlEl = document.documentElement;
-  const toggleBtns = [
-    document.getElementById("dark-toggle"),
-    document.getElementById("dark-toggle-desktop"),
-  ].filter(Boolean);
-
-  function setIcon(isDark) {
-    toggleBtns.forEach((btn) => {
-      const icon = btn.querySelector("i");
-      if (icon) {
-        icon.className = isDark ? "ri-sun-line" : "ri-moon-line";
-      }
-    });
-  }
-
-  function applyTheme(isDark) {
-    htmlEl.setAttribute("data-theme", isDark ? "dark" : "light");
-    setIcon(isDark);
-  }
-
-  // Respect system preference on first load
-  const systemPrefersDark = window.matchMedia(
-    "(prefers-color-scheme: dark)"
-  ).matches;
-  applyTheme(systemPrefersDark);
-
-  toggleBtns.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const isDark = htmlEl.getAttribute("data-theme") === "dark";
-      applyTheme(!isDark);
-    });
-  });
-})();
-
-/* ============================================================
-   8. FLIGHT SEARCH (Demo data, client-side only)
+   7. FLIGHT SEARCH (Demo data, client-side only)
    UPGRADE: Simulates a real flight search experience —
    great talking point in interviews about array methods,
    filtering, DOM manipulation, and form handling
@@ -482,7 +441,7 @@ backToTopBtn.addEventListener("click", () => {
 })();
 
 /* ============================================================
-   9. CONTACT FORM VALIDATION & SUBMISSION
+   8. CONTACT FORM VALIDATION & SUBMISSION
    UPGRADE: Client-side validation + simulated submission.
    To make this send real emails, connect to EmailJS
    (https://www.emailjs.com) — free tier available.
@@ -584,7 +543,7 @@ backToTopBtn.addEventListener("click", () => {
 })();
 
 /* ============================================================
-   10. NEWSLETTER SUBSCRIBE HANDLER
+   9. NEWSLETTER SUBSCRIBE HANDLER
    (Moved from inline <script> in HTML to main.js)
    ============================================================ */
 function handleSubscribe(e) {
