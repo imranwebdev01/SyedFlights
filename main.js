@@ -854,7 +854,7 @@ const Auth = (function initAuth() {
     if (!panel || !currentUser) return;
 
     try {
-      const res = await autfetch(`${API_BASE_URL}/api/bookings`h);
+      coconst res = await autfetch(`${API_BASE_URL}/api/bookings`);
       const data = await res.json();
       if (!data.success) return;
 
