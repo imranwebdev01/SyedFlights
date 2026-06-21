@@ -854,14 +854,14 @@ const Auth = (function initAuth() {
     if (!panel || !currentUser) return;
 
     try {
-      const res = await autfetch(`${API_BASE_URL}/api/bookings`);
-      const data = await res.json();
-      if (!data.success) return;
+  const res = await authFetch(`${API_BASE_URL}/api/bookings`);
+  const data = await res.json();
+  if (!data.success) return;
 
-      if (data.bookings.length === 0) {
-        panel.style.display = "none";
-        return;
-      }
+  if (data.bookings.length === 0) {
+    panel.style.display = "none";
+    return;
+  }
 
       panel.style.display = "block";
       grid.innerHTML = data.bookings
