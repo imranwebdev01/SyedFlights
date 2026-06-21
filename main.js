@@ -5,6 +5,7 @@
 /* ============================================================
    1. NAVIGATION — Mobile Menu Toggle
    ============================================================ */
+   const API_BASE_URL = "https://syedflights-backend-production.up.railway.app";
 const menuBtn = document.getElementById("menu-btn");
 const navLinks = document.getElementById("nav-links");
 const menuBtnIcon = menuBtn.querySelector("i");
@@ -479,7 +480,7 @@ backToTopBtn.addEventListener("click", () => {
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const isNameValid = validateField(
@@ -512,23 +513,45 @@ backToTopBtn.addEventListener("click", () => {
 
     if (!allValid) return;
 
-    // Simulate submission (swap this block for a real EmailJS/Formspree call)
+    // UPGRADE: Real submission to the backend instead of a simulated delay
     submitBtn.disabled = true;
     submitText.style.display = "none";
     submitLoading.style.display = "inline-flex";
     formSuccess.style.display = "none";
 
-    setTimeout(() => {
-      submitBtn.disabled = false;
-      submitText.style.display = "inline-flex";
-      submitLoading.style.display = "none";
+    try {
+      const response = awaitfetch(`${API_BASE_URL}/api/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: nameInput.value.trim(),
+          email: emailInput.value.trim(),
+          subject: subjectInput.value,
+          message: messageInput.value.trim(),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Something went wrong. Please try again.");
+      }
+
+      formSuccess.querySelector("p").textContent = data.message;
       formSuccess.style.display = "flex";
       form.reset();
 
       setTimeout(() => {
         formSuccess.style.display = "none";
       }, 5000);
-    }, 1200);
+    } catch (err) {
+      messageError.textContent = err.message;
+      messageInput.classList.add("invalid");
+    } finally {
+      submitBtn.disabled = false;
+      submitText.style.display = "inline-flex";
+      submitLoading.style.display = "none";
+    }
   });
 
   // Real-time validation as user types (clears error once corrected)
@@ -560,3 +583,389 @@ function handleSubscribe(e) {
     }, 4000);
   }
 }
+
+/* ============================================================
+   11. AUTHENTICATION — Sign In / Create Account / Session
+   Talks to the Express + SQLite backend. Token is kept in
+   memory only (not localStorage) per this environment's
+   constraints — for a production deploy, store the JWT in
+   localStorage or, better, an httpOnly cookie set by the server.
+   ============================================================ */
+const Auth = (function initAuth() {
+  let currentUser = null;
+  let currentToken = null;
+
+  // ---- DOM refs ----
+  const overlay = document.getElementById("auth-overlay");
+  const closeBtn = document.getElementById("auth-close");
+  const tabs = document.querySelectorAll(".auth__tab");
+  const loginForm = document.getElementById("login-form");
+  const signupForm = document.getElementById("signup-form");
+  const loginAlert = document.getElementById("login-alert");
+  const signupAlert = document.getElementById("signup-alert");
+
+  const accountBtn = document.getElementById("account-btn");
+  const accountBtnLabel = document.getElementById("account-btn-label");
+  const navAccountLink = document.getElementById("nav-account-link");
+
+  if (!overlay || !accountBtn) return null; // page doesn't include auth UI
+
+  // ---- Modal open/close ----
+  function openModal(tab = "login") {
+    overlay.classList.add("open");
+    switchTab(tab);
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal() {
+    overlay.classList.remove("open");
+    document.body.style.overflow = "";
+    clearAlerts();
+  }
+
+  function clearAlerts() {
+    [loginAlert, signupAlert].forEach((el) => {
+      el.classList.remove("show", "error", "success");
+      el.textContent = "";
+    });
+  }
+
+  function switchTab(tab) {
+    tabs.forEach((t) => t.classList.toggle("active", t.dataset.authTab === tab));
+    loginForm.style.display = tab === "login" ? "grid" : "none";
+    signupForm.style.display = tab === "signup" ? "grid" : "none";
+    clearAlerts();
+  }
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => switchTab(tab.dataset.authTab));
+  });
+
+  closeBtn.addEventListener("click", closeModal);
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) closeModal();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && overlay.classList.contains("open")) closeModal();
+  });
+
+  accountBtn.addEventListener("click", () => {
+    if (currentUser) {
+      toggleAccountDropdown();
+    } else {
+      openModal("login");
+    }
+  });
+
+  if (navAccountLink) {
+    navAccountLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (currentUser) {
+        window.location.hash = "#search";
+      } else {
+        openModal("login");
+        document.getElementById("nav-links").classList.remove("open");
+      }
+    });
+  }
+
+  function showAlert(el, message, type) {
+    el.textContent = message;
+    el.classList.remove("error", "success");
+    el.classList.add("show", type);
+  }
+
+  // ---- Account dropdown (shown after login) ----
+  let dropdownEl = null;
+
+  function toggleAccountDropdown() {
+    if (dropdownEl) {
+      dropdownEl.classList.toggle("open");
+      return;
+    }
+    buildDropdown();
+    dropdownEl.classList.add("open");
+  }
+
+  function buildDropdown() {
+    const wrapper = document.createElement("div");
+    wrapper.className = "account__dropdown";
+    accountBtn.parentNode.insertBefore(wrapper, accountBtn);
+    wrapper.appendChild(accountBtn);
+
+    dropdownEl = document.createElement("div");
+    dropdownEl.className = "account__dropdown__menu";
+    dropdownEl.innerHTML = `
+      <div class="account__dropdown__header">
+        <strong>${escapeHtml(currentUser.fullName)}</strong>
+        <span>${escapeHtml(currentUser.email)}</span>
+      </div>
+      <button class="account__dropdown__item" id="dropdown-my-trips">
+        <i class="ri-bookmark-3-line"></i> My Saved Trips
+      </button>
+      <button class="account__dropdown__item danger" id="dropdown-logout">
+        <i class="ri-logout-box-line"></i> Sign Out
+      </button>
+    `;
+    wrapper.appendChild(dropdownEl);
+
+    dropdownEl.querySelector("#dropdown-my-trips").addEventListener("click", () => {
+      dropdownEl.classList.remove("open");
+      document.getElementById("search").scrollIntoView({ behavior: "smooth" });
+      loadSavedTrips();
+    });
+    dropdownEl.querySelector("#dropdown-logout").addEventListener("click", logout);
+
+    document.addEventListener("click", (e) => {
+      if (dropdownEl && !wrapper.contains(e.target)) {
+        dropdownEl.classList.remove("open");
+      }
+    });
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  // ---- Update navbar UI based on auth state ----
+  function refreshAccountUI() {
+    if (currentUser) {
+      accountBtnLabel.textContent = currentUser.fullName.split(" ")[0];
+      accountBtn.querySelector("i").className = "ri-user-fill";
+      accountBtn.classList.add("logged-in");
+      if (navAccountLink) navAccountLink.textContent = "MY ACCOUNT";
+      loadSavedTrips();
+    } else {
+      accountBtnLabel.textContent = "Sign In";
+      accountBtn.querySelector("i").className = "ri-user-line";
+      accountBtn.classList.remove("logged-in");
+      if (navAccountLink) navAccountLink.textContent = "SIGN IN";
+      const panel = document.getElementById("saved-trips-panel");
+      if (panel) panel.style.display = "none";
+    }
+  }
+
+  // ---- LOGIN ----
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    clearAlerts();
+
+    const email = document.getElementById("login-email").value.trim();
+    const password = document.getElementById("login-password").value;
+    const submitBtn = document.getElementById("login-submit");
+
+    setSubmitLoading(submitBtn, true);
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Login failed.");
+      }
+
+      currentUser = data.user;
+      currentToken = data.token;
+      showAlert(loginAlert, data.message, "success");
+      refreshAccountUI();
+
+      setTimeout(closeModal, 800);
+    } catch (err) {
+      showAlert(loginAlert, err.message, "error");
+    } finally {
+      setSubmitLoading(submitBtn, false);
+    }
+  });
+
+  // ---- SIGNUP ----
+  signupForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    clearAlerts();
+
+    const fullName = document.getElementById("signup-name").value.trim();
+    const email = document.getElementById("signup-email").value.trim();
+    const password = document.getElementById("signup-password").value;
+    const submitBtn = document.getElementById("signup-submit");
+
+    setSubmitLoading(submitBtn, true);
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/auth/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fullName, email, password }),
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Signup failed.");
+      }
+
+      currentUser = data.user;
+      currentToken = data.token;
+      showAlert(signupAlert, data.message, "success");
+      refreshAccountUI();
+
+      setTimeout(closeModal, 800);
+    } catch (err) {
+      showAlert(signupAlert, err.message, "error");
+    } finally {
+      setSubmitLoading(submitBtn, false);
+    }
+  });
+
+  function setSubmitLoading(btn, isLoading) {
+    const text = btn.querySelector(".auth__submit__text");
+    const loading = btn.querySelector(".auth__submit__loading");
+    btn.disabled = isLoading;
+    text.style.display = isLoading ? "none" : "inline-flex";
+    loading.style.display = isLoading ? "inline-flex" : "none";
+  }
+
+  function logout() {
+    currentUser = null;
+    currentToken = null;
+    if (dropdownEl) dropdownEl.classList.remove("open");
+    refreshAccountUI();
+  }
+
+  // ---- Authenticated fetch helper ----
+  async function authFetch(url, options = {}) {
+    if (!currentToken) throw new Error("Not logged in.");
+    return fetch(url, {
+      ...options,
+      headers: {
+        ...(options.headers || {}),
+        Authorization: `Bearer ${currentToken}`,
+      },
+    });
+  }
+
+  // ---- Saved trips ----
+  async function loadSavedTrips() {
+    const panel = document.getElementById("saved-trips-panel");
+    const grid = document.getElementById("saved-trips-grid");
+    if (!panel || !currentUser) return;
+
+    try {
+      const res = await autfetch(`${API_BASE_URL}/api/bookings`h);
+      const data = await res.json();
+      if (!data.success) return;
+
+      if (data.bookings.length === 0) {
+        panel.style.display = "none";
+        return;
+      }
+
+      panel.style.display = "block";
+      grid.innerHTML = data.bookings
+        .map(
+          (b) => `
+        <div class="saved__trip__card" data-id="${b.id}">
+          <div class="saved__trip__info">
+            <strong>${escapeHtml(b.from_city)} → ${escapeHtml(b.to_city)}</strong>
+            <span class="saved__trip__meta">
+              <i class="ri-calendar-line"></i> ${b.depart_date}${b.return_date ? " – " + b.return_date : ""}
+              · ${b.passengers} passenger${b.passengers > 1 ? "s" : ""}
+            </span>
+          </div>
+          <button class="saved__trip__delete" data-delete-id="${b.id}" aria-label="Remove trip">
+            <i class="ri-delete-bin-line"></i>
+          </button>
+        </div>
+      `
+        )
+        .join("");
+
+      grid.querySelectorAll("[data-delete-id]").forEach((btn) => {
+        btn.addEventListener("click", () => deleteSavedTrip(btn.dataset.deleteId));
+      });
+    } catch (err) {
+      console.error("Failed to load saved trips:", err);
+    }
+  }
+
+  async function deleteSavedTrip(id) {
+    try {
+      await authFetch(`/api/bookings/${id}`, { method: "DELETE" });
+      loadSavedTrips();
+    } catch (err) {
+      console.error("Failed to delete trip:", err);
+    }
+  }
+
+  async function saveTrip(tripData) {
+    if (!currentUser) {
+      openModal("login");
+      return { success: false, requiresAuth: true };
+    }
+    try {
+      const res = await authFetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(tripData),
+      });
+      const data = await res.json();
+      if (data.success) loadSavedTrips();
+      return data;
+    } catch (err) {
+      return { success: false, message: "Could not save trip." };
+    }
+  }
+
+  // Public API used by the flight search module below
+  return {
+    isLoggedIn: () => !!currentUser,
+    getUser: () => currentUser,
+    saveTrip,
+    openModal,
+  };
+})();
+
+/* ============================================================
+   12. WIRE "Select" BUTTON IN FLIGHT RESULTS TO SAVE TRIP
+   Hooks into the flight search results rendered earlier and
+   makes the "Select" button actually save a trip via the API.
+   ============================================================ */
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest(".flight__book__btn");
+  if (!btn || !Auth) return;
+
+  const card = btn.closest(".flight__result");
+  if (!card) return;
+
+  const from = document.getElementById("search-from")?.value || "";
+  const to = document.getElementById("search-to")?.value || "";
+  const depart = document.getElementById("search-depart")?.value || "";
+  const returnDate = document.getElementById("search-return")?.value || "";
+  const passengers = document.getElementById("search-passengers")?.value || 1;
+
+  const originalText = btn.textContent;
+  btn.textContent = "Saving...";
+  btn.disabled = true;
+
+  const result = await Auth.saveTrip({
+    fromCity: from,
+    toCity: to,
+    departDate: depart,
+    returnDate: returnDate || null,
+    passengers: Number(passengers),
+  });
+
+  if (result.success) {
+    btn.textContent = "Saved ✓";
+    btn.classList.add("saved");
+  } else if (result.requiresAuth) {
+    btn.textContent = originalText;
+  } else {
+    btn.textContent = "Try Again";
+    setTimeout(() => (btn.textContent = originalText), 1500);
+  }
+  btn.disabled = false;
+});
