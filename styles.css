@@ -139,16 +139,7 @@ input,select,textarea{font-family:var(--font-body);outline:none;border:none}
 
 /* HERO */
 .hero{position:relative;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding-top:var(--nav-h)}
-.hero-bg{
-    position:absolute;
-    inset:0;
-    z-index:0;
-
-    background-image: url('./assets/header-bg.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
+.hero-bg{position:absolute;inset:0;z-index:0}
 .hero-gradient{position:absolute;inset:0;background:radial-gradient(ellipse 90% 60% at 50% -5%,rgba(20,42,82,.9) 0%,transparent 65%),var(--grad-hero)}
 .hero-aurora{position:absolute;top:-20%;left:30%;width:50vw;height:50vw;background:radial-gradient(circle,rgba(91,141,239,.18) 0%,transparent 60%);filter:blur(40px);animation:auroraShift 16s ease-in-out infinite}
 .stars{position:absolute;inset:0;overflow:hidden}
@@ -383,8 +374,18 @@ input,select,textarea{font-family:var(--font-body);outline:none;border:none}
   .flight-card{flex-direction:column;align-items:flex-start}
   .flight-price-col{align-items:flex-start;width:100%}
 }
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}[data-reveal]{opacity:1!important;transform:none!important}.hero-plane{display:none}}
-.hero-image {
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}[data-reveal]{opacity:1!important;transform:none!important}.hero-plane{display:none}}.hero-image {
+    position: absolute;
+    right: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 45%;
+    max-width: 700px;
+    z-index: 2;
+    opacity: 0.95;
+    pointer-events: none;
+}
+.hero-image{
     position: absolute;
     right: 0;
     top: 50%;
@@ -395,6 +396,7 @@ input,select,textarea{font-family:var(--font-body);outline:none;border:none}
     opacity: 1;
     display: block;
 }
+
 @media (max-width: 992px) {
     .hero-image {
         width: 80%;

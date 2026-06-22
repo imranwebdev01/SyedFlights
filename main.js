@@ -7,12 +7,12 @@ const $$ = (s, c = document) => [...c.querySelectorAll(s)];
 /* ============ DATA (reusable component sources) ============ */
 const DATA = {
   destinations: [
-    { city:'New York',  country:'United States', rating:4.8, price:299, badge:'Trending',   grad:'#1e3a8a,#3b82f6', icon:'ri-building-line' },
-    { city:'Paris',     country:'France',         rating:4.9, price:449, badge:'Most Loved', grad:'#831843,#ec4899', icon:'ri-ancient-gate-line' },
-    { city:'Bali',      country:'Indonesia',      rating:4.7, price:389, badge:'Best Value', grad:'#065f46,#10b981', icon:'ri-plant-line' },
-    { city:'Dubai',     country:'UAE',            rating:4.8, price:520, badge:'Luxury',     grad:'#92400e,#f59e0b', icon:'ri-building-4-line' },
-    { city:'Tokyo',     country:'Japan',          rating:4.9, price:699, badge:'Exotic',     grad:'#7c2d12,#ef4444', icon:'ri-government-line' },
-    { city:'Istanbul',  country:'Turkey',         rating:4.6, price:349, badge:'Hidden Gem', grad:'#581c87,#a855f7', icon:'ri-ancient-pavilion-line' },
+    { city:'New York', country:'United States', rating:4.8, price:299, badge:'Trending', grad:'#...', image:'assets/destination-1.jpg' },
+    { city:'Paris', country:'France', rating:4.9, price:449, badge:'Most Loved', grad:'#...', image:'assets/destination-2.jpg' },
+   { city:'Bali', country:'Indonesia', rating:4.7, price:389, badge:'Best Value', grad:'#...', image:'assets/destination-3.jpg' },
+    { city:'Dubai', country:'UAE', rating:4.8, price:520, badge:'Luxury', grad:'#...', image:'assets/destination-1.jpg' },
+    { city:'Tokyo', country:'Japan', rating:4.9, price:699, badge:'Exotic', grad:'#...', image:'assets/destination-2.jpg' },
+    { city:'Istanbul', country:'Turkey', rating:4.6, price:349, badge:'Hidden Gem', grad:'#...', image:'assets/destination-3.jpg' },
   ],
   why: [
     { icon:'ri-shield-check-fill',        title:'Secure Booking',        text:'Bank-grade encryption protects every transaction. Book with complete confidence.' },
@@ -45,9 +45,9 @@ function buildDestinations(){
   $('#dest-grid').innerHTML = DATA.destinations.map(d=>`
     <div class="dest-card" data-reveal>
       <div class="dest-img-wrap">
-        <div class="dest-img" style="background:linear-gradient(135deg,${d.grad});display:flex;align-items:center;justify-content:center">
-          <i class="${d.icon}" style="font-size:3.5rem;color:rgba(255,255,255,.4)"></i>
-        </div>
+        <div class="dest-image">
+    <img src="${d.image}" alt="${d.city}">
+</div>
         <div class="dest-overlay"><span class="dest-badge">${d.badge}</span></div>
       </div>
       <div class="dest-info">
