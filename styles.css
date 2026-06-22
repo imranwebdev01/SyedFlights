@@ -429,12 +429,11 @@ input,select,textarea{font-family:var(--font-body);outline:none;border:none}
   }
 
   .hero-image {
-    width: 80%;
-    max-width: 300px;
-    right: 50%;
-    top: 82%;
-    transform: translate(50%, -50%);
-    opacity: 0.9;
+    width: 100%;
+    max-width: 450px;
+    right: -20%;
+    top: 15%;
+    transform: none;
+    opacity: 0.3;
+}
   }
-}
-}
