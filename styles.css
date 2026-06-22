@@ -374,4 +374,22 @@ input,select,textarea{font-family:var(--font-body);outline:none;border:none}
   .flight-card{flex-direction:column;align-items:flex-start}
   .flight-price-col{align-items:flex-start;width:100%}
 }
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}[data-reveal]{opacity:1!important;transform:none!important}.hero-plane{display:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}[data-reveal]{opacity:1!important;transform:none!important}.hero-plane{display:none}}.hero-image {
+    position: absolute;
+    right: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 45%;
+    max-width: 700px;
+    z-index: 2;
+    opacity: 0.95;
+    pointer-events: none;
+}
+
+@media (max-width: 992px) {
+    .hero-image {
+        width: 80%;
+        right: 10%;
+        top: 65%;
+    }
+}
