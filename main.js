@@ -45,9 +45,7 @@ function buildDestinations(){
   $('#dest-grid').innerHTML = DATA.destinations.map(d=>`
     <div class="dest-card" data-reveal>
       <div class="dest-img-wrap">
-        <div class="dest-image">
-    <img src="${d.image}" alt="${d.city}">
-</div>
+   <img class="dest-img" src="${d.image}" alt="${d.city}">
         <div class="dest-overlay"><span class="dest-badge">${d.badge}</span></div>
       </div>
       <div class="dest-info">
