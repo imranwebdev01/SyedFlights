@@ -1,971 +1,345 @@
 /* ============================================================
-   SYEDFLIGHTS — main.js
-   ============================================================ */
+   SYEDFLIGHTS — main.js (component-driven, self-contained)
+============================================================ */
+const $  = (s, c = document) => c.querySelector(s);
+const $$ = (s, c = document) => [...c.querySelectorAll(s)];
 
-/* ============================================================
-   1. NAVIGATION — Mobile Menu Toggle
-   ============================================================ */
-   const API_BASE_URL = "https://syedflights-backend-production.up.railway.app";
-const menuBtn = document.getElementById("menu-btn");
-const navLinks = document.getElementById("nav-links");
-const menuBtnIcon = menuBtn.querySelector("i");
-
-// FIX 1: Guard clause — prevents crash if elements are missing in DOM
-if (menuBtn && navLinks && menuBtnIcon) {
-  menuBtn.addEventListener("click", () => {
-    navLinks.classList.toggle("open");
-    const isOpen = navLinks.classList.contains("open");
-    menuBtnIcon.setAttribute("class", isOpen ? "ri-close-line" : "ri-menu-line");
-
-    // UPGRADE 1: Accessibility — tell screen readers menu state
-    menuBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
-  });
-
-  // Close menu when a nav link is clicked
-  navLinks.addEventListener("click", () => {
-    navLinks.classList.remove("open");
-    menuBtnIcon.setAttribute("class", "ri-menu-line");
-    menuBtn.setAttribute("aria-expanded", "false");
-  });
-
-  // UPGRADE 2: Close menu when clicking outside navbar (better UX)
-  document.addEventListener("click", (e) => {
-    const isInsideNav = menuBtn.contains(e.target) || navLinks.contains(e.target);
-    if (!isInsideNav && navLinks.classList.contains("open")) {
-      navLinks.classList.remove("open");
-      menuBtnIcon.setAttribute("class", "ri-menu-line");
-      menuBtn.setAttribute("aria-expanded", "false");
-    }
-  });
-
-  // UPGRADE 3: Close menu on Escape key press
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && navLinks.classList.contains("open")) {
-      navLinks.classList.remove("open");
-      menuBtnIcon.setAttribute("class", "ri-menu-line");
-      menuBtn.setAttribute("aria-expanded", "false");
-      menuBtn.focus(); // Return focus to menu button
-    }
-  });
-}
-
-/* ============================================================
-   2. ACTIVE NAV LINK — Highlight current section in navbar
-   UPGRADE 4: Was completely missing in original
-   ============================================================ */
-const sections = document.querySelectorAll("section[id], header[id], footer[id]");
-const allNavLinks = document.querySelectorAll(".nav__links a");
-
-const observerOptions = {
-  root: null,
-  rootMargin: "0px",
-  threshold: 0.4,
+/* ============ DATA (reusable component sources) ============ */
+const DATA = {
+  destinations: [
+    { city:'New York',  country:'United States', rating:4.8, price:299, badge:'Trending',   grad:'#1e3a8a,#3b82f6', icon:'ri-building-line' },
+    { city:'Paris',     country:'France',         rating:4.9, price:449, badge:'Most Loved', grad:'#831843,#ec4899', icon:'ri-ancient-gate-line' },
+    { city:'Bali',      country:'Indonesia',      rating:4.7, price:389, badge:'Best Value', grad:'#065f46,#10b981', icon:'ri-plant-line' },
+    { city:'Dubai',     country:'UAE',            rating:4.8, price:520, badge:'Luxury',     grad:'#92400e,#f59e0b', icon:'ri-building-4-line' },
+    { city:'Tokyo',     country:'Japan',          rating:4.9, price:699, badge:'Exotic',     grad:'#7c2d12,#ef4444', icon:'ri-government-line' },
+    { city:'Istanbul',  country:'Turkey',         rating:4.6, price:349, badge:'Hidden Gem', grad:'#581c87,#a855f7', icon:'ri-ancient-pavilion-line' },
+  ],
+  why: [
+    { icon:'ri-shield-check-fill',        title:'Secure Booking',        text:'Bank-grade encryption protects every transaction. Book with complete confidence.' },
+    { icon:'ri-price-tag-3-fill',         title:'Best Price Guarantee',  text:"Found it cheaper elsewhere? We'll match it and give you an extra 10% off." },
+    { icon:'ri-customer-service-2-fill',  title:'24/7 Expert Support',   text:'Our travel specialists are available around the clock, wherever you are.' },
+    { icon:'ri-calendar-check-fill',      title:'Flexible Changes',      text:'Plans change. Modify or cancel up to 24 hours before departure, no fee.' },
+    { icon:'ri-map-2-fill',               title:'Curated Itineraries',   text:'Expertly designed travel plans tailored to your style, budget, and interests.' },
+    { icon:'ri-award-fill',               title:'Loyalty Rewards',       text:'Earn miles on every booking. Redeem for upgrades, lounges, and free flights.' },
+  ],
+  packages: [
+    { featured:true, badge:'Most Popular', icon:'ri-vip-crown-fill', name:'Business Class Escape', desc:'Lie-flat seats, fine dining at 40,000 feet, and a 5-star hotel on arrival.', price:'2,499',
+      features:['Business class flights','5-star hotel (7 nights)','Private airport transfers','Lounge access included'], btn:'btn-primary' },
+    { icon:'ri-sun-fill', name:'Weekend Getaway', desc:'Short on time, big on experience. Perfect 3-day escapes to nearby gems.', price:'499',
+      features:['Economy class flights','4-star hotel (3 nights)','City tour included','Flexible dates'], btn:'btn-outline' },
+    { icon:'ri-seedling-fill', name:'Family Adventure', desc:'Memories that last a lifetime. Kid-friendly destinations for all ages.', price:'1,299',
+      features:['Family seating together','Resort hotel (10 nights)','Kids activities included','Travel insurance'], btn:'btn-outline' },
+  ],
+  reviews: [
+    { stars:5, text:"SyedFlights turned our honeymoon into a dream. Every detail was perfect — from the seamless booking to the upgrade surprise at check-in.", name:'Amina Rashid', loc:'Dubai, UAE' },
+    { stars:5, text:"As a frequent business traveler, I need reliability above all. SyedFlights consistently delivers — best prices, zero headaches, brilliant 24/7 team.", name:"James O'Brien", loc:'London, UK' },
+    { stars:5, text:"Booked the Business Class Escape for our anniversary. The lounge, the lie-flat bed, the hotel — everything exceeded expectations. Worth every penny.", name:'Priya Mehta', loc:'Mumbai, India' },
+    { stars:4.5, text:"Took the whole family to Bali. Six people, zero stress. The kids loved every minute, and the price beat five other sites I checked.", name:'David Kim', loc:'Seoul, South Korea' },
+  ],
 };
 
-const sectionObserver = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    if (entry.isIntersecting) {
-      allNavLinks.forEach((link) => {
-        link.classList.remove("active");
-        if (link.getAttribute("href") === `#${entry.target.id}`) {
-          link.classList.add("active");
-        }
-      });
-    }
-  });
-}, observerOptions);
+/* ============ COMPONENT RENDERERS ============ */
+function renderStars(n){let h='';for(let i=0;i<5;i++){h+= i<Math.floor(n)?'<i class="ri-star-fill"></i>':(i<n?'<i class="ri-star-half-fill"></i>':'<i class="ri-star-line"></i>');}return h;}
 
-sections.forEach((section) => sectionObserver.observe(section));
-
-/* ============================================================
-   3. SCROLL REVEAL ANIMATIONS
-   FIX 2: Added prefers-reduced-motion check — animations
-   won't run for users who have this OS setting enabled
-   ============================================================ */
-const prefersReducedMotion = window.matchMedia(
-  "(prefers-reduced-motion: reduce)"
-).matches;
-
-if (!prefersReducedMotion && typeof ScrollReveal !== "undefined") {
-  const scrollRevealOption = {
-    origin: "bottom",
-    distance: "50px",
-    duration: 1000,
-    // UPGRADE 5: Added easing for smoother, more professional feel
-    easing: "cubic-bezier(0.5, 0, 0, 1)",
-    // UPGRADE 6: Reset false — elements stay visible once revealed
-    reset: false,
-  };
-
-  // Hero Section
-  ScrollReveal().reveal(".header__image img", {
-    ...scrollRevealOption,
-    origin: "right",
-  });
-  ScrollReveal().reveal(".header__content p", {
-    ...scrollRevealOption,
-    delay: 300,
-  });
-  ScrollReveal().reveal(".header__content h1", {
-    ...scrollRevealOption,
-    delay: 600,
-  });
-  ScrollReveal().reveal(".header__btns", {
-    ...scrollRevealOption,
-    delay: 900,
-    // FIX 3: Reduced from 1500ms — felt too slow, users left before seeing it
-  });
-
-  // Destinations
-  ScrollReveal().reveal(".destination__card", {
-    ...scrollRevealOption,
-    interval: 200,
-    // FIX 4: Reduced interval from 500ms to 200ms — cards now appear quicker
-  });
-
-  // Journey cards
-  // UPGRADE 7: Was missing in original — journey cards now animate in
-  ScrollReveal().reveal(".journey__card", {
-    ...scrollRevealOption,
-    interval: 200,
-    origin: "bottom",
-  });
-
-  // Showcase Section
-  ScrollReveal().reveal(".showcase__image img", {
-    ...scrollRevealOption,
-    origin: "left",
-  });
-  ScrollReveal().reveal(".showcase__content h4", {
-    ...scrollRevealOption,
-    delay: 300,
-  });
-  ScrollReveal().reveal(".showcase__content p", {
-    ...scrollRevealOption,
-    delay: 500,
-  });
-  ScrollReveal().reveal(".showcase__btn", {
-    ...scrollRevealOption,
-    delay: 700,
-    // FIX 5: Reduced from 1500ms — was too delayed
-  });
-
-  // Banner Stats
-  ScrollReveal().reveal(".banner__card", {
-    ...scrollRevealOption,
-    interval: 200,
-  });
-
-  // Discover Cards
-  ScrollReveal().reveal(".discover__card", {
-    ...scrollRevealOption,
-    interval: 200,
-  });
-
-  // UPGRADE 8: Reveal section headers too — was missing in original
-  ScrollReveal().reveal(".section__header", {
-    ...scrollRevealOption,
-    distance: "30px",
-  });
-  ScrollReveal().reveal(".section__description", {
-    ...scrollRevealOption,
-    distance: "20px",
-    delay: 200,
-  });
-}
-
-/* ============================================================
-   4. SWIPER TESTIMONIALS
-   FIX 6: Original had slidesPerView: 3 hardcoded — broke on
-   mobile showing 3 tiny cards. Now responsive breakpoints added.
-   ============================================================ */
-if (typeof Swiper !== "undefined") {
-  const swiper = new Swiper(".swiper", {
-    // UPGRADE 9: Auto width based on slide content
-    slidesPerView: "auto",
-    spaceBetween: 20,
-    loop: true,
-
-    // FIX 7: Added responsive breakpoints
-    breakpoints: {
-      0: {
-        slidesPerView: 1,
-        spaceBetween: 16,
-      },
-      540: {
-        slidesPerView: 2,
-        spaceBetween: 20,
-      },
-      1024: {
-        slidesPerView: 3,
-        spaceBetween: 20,
-      },
-    },
-
-    // UPGRADE 10: Added autoplay — carousel moves on its own
-    autoplay: {
-      delay: 3500,
-      disableOnInteraction: false,
-      pauseOnMouseEnter: true,
-    },
-
-    // UPGRADE 11: Added keyboard navigation for accessibility
-    keyboard: {
-      enabled: true,
-    },
-
-    // UPGRADE 12: Added grab cursor for better desktop UX
-    grabCursor: true,
-  });
-}
-
-/* ============================================================
-   5. NAVBAR SHADOW ON SCROLL
-   UPGRADE 13: Was completely missing — nav now gets a shadow
-   when user scrolls down, looks more professional
-   ============================================================ */
-const nav = document.querySelector("nav");
-
-if (nav) {
-  window.addEventListener("scroll", () => {
-    if (window.scrollY > 50) {
-      nav.style.boxShadow = "0 4px 20px rgba(0, 0, 0, 0.1)";
-      nav.style.backdropFilter = "blur(8px)";
-    } else {
-      nav.style.boxShadow = "none";
-      nav.style.backdropFilter = "none";
-    }
-  });
-}
-
-/* ============================================================
-   6. BACK TO TOP BUTTON
-   UPGRADE 14: Was completely missing — added smooth scroll
-   back to top button that appears after scrolling down
-   ============================================================ */
-const backToTopBtn = document.createElement("button");
-backToTopBtn.innerHTML = '<i class="ri-arrow-up-line"></i>';
-backToTopBtn.setAttribute("aria-label", "Back to top");
-backToTopBtn.style.cssText = `
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: none;
-  background-color: #2887ff;
-  color: white;
-  font-size: 1.25rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(40, 135, 255, 0.4);
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.3s, transform 0.3s;
-  z-index: 999;
-`;
-document.body.appendChild(backToTopBtn);
-
-window.addEventListener("scroll", () => {
-  if (window.scrollY > 400) {
-    backToTopBtn.style.opacity = "1";
-    backToTopBtn.style.transform = "translateY(0)";
-  } else {
-    backToTopBtn.style.opacity = "0";
-    backToTopBtn.style.transform = "translateY(20px)";
-  }
-});
-
-backToTopBtn.addEventListener("click", () => {
-  window.scrollTo({ top: 0, behavior: "smooth" });
-});
-
-/* ============================================================
-   7. FLIGHT SEARCH (Demo data, client-side only)
-   UPGRADE: Simulates a real flight search experience —
-   great talking point in interviews about array methods,
-   filtering, DOM manipulation, and form handling
-   ============================================================ */
-(function initFlightSearch() {
-  const searchForm = document.querySelector(".search__form");
-  if (!searchForm) return;
-
-  const tabs = document.querySelectorAll(".search__tab");
-  const returnField = document.getElementById("return-field");
-  const fromInput = document.getElementById("search-from");
-  const toInput = document.getElementById("search-to");
-  const departInput = document.getElementById("search-depart");
-  const swapBtn = document.getElementById("swap-btn");
-  const searchBtn = document.getElementById("search-btn");
-  const resultsSection = document.getElementById("search-results");
-  const resultsGrid = document.getElementById("results-grid");
-  const emptyState = document.getElementById("search-empty");
-
-  // Set min date to today
-  const today = new Date().toISOString().split("T")[0];
-  if (departInput) departInput.min = today;
-  const returnInput = document.getElementById("search-return");
-  if (returnInput) returnInput.min = today;
-
-  // Trip type tabs
-  tabs.forEach((tab) => {
-    tab.addEventListener("click", () => {
-      tabs.forEach((t) => t.classList.remove("active"));
-      tab.classList.add("active");
-
-      if (tab.dataset.tab === "roundtrip") {
-        returnField.style.display = "flex";
-      } else {
-        returnField.style.display = "none";
-      }
-    });
-  });
-
-  // Swap From/To cities
-  if (swapBtn) {
-    swapBtn.addEventListener("click", () => {
-      const temp = fromInput.value;
-      fromInput.value = toInput.value;
-      toInput.value = temp;
-    });
-  }
-
-  // Demo airline data for generated results
-  const airlines = [
-    { name: "SyedFlights Air", icon: "ri-flight-takeoff-line" },
-    { name: "SkyLine Express", icon: "ri-plane-line" },
-    { name: "Global Wings", icon: "ri-flight-land-line" },
-  ];
-
-  function generateFlights(from, to) {
-    // Generates 3 randomized demo flights between chosen cities
-    return airlines.map((airline, i) => {
-      const basePrice = 250 + i * 120 + Math.floor(Math.random() * 80);
-      const hours = 2 + i;
-      const minutes = Math.floor(Math.random() * 60);
-      return {
-        airline: airline.name,
-        icon: airline.icon,
-        from: from || "Origin",
-        to: to || "Destination",
-        duration: `${hours}h ${minutes}m`,
-        stops: i === 0 ? "Non-stop" : `${i} Stop${i > 1 ? "s" : ""}`,
-        price: basePrice,
-      };
-    });
-  }
-
-  function renderFlights(flights) {
-    resultsGrid.innerHTML = flights
-      .map(
-        (f) => `
-        <div class="flight__result">
-          <div class="flight__info">
-            <div class="flight__airline">
-              <i class="${f.icon}"></i>
-              <span>${f.airline}</span>
-            </div>
-            <div class="flight__route">
-              <span>${f.from}</span>
-              <span class="route__line"></span>
-              <span>${f.to}</span>
-            </div>
-            <div class="flight__route">
-              <i class="ri-time-line"></i>
-              <span>${f.duration} · ${f.stops}</span>
-            </div>
-          </div>
-          <div class="flight__price">
-            <h4>$${f.price}</h4>
-            <span>per person</span>
-            <br/>
-            <button class="btn flight__book__btn" type="button">Select</button>
-          </div>
+function buildDestinations(){
+  $('#dest-grid').innerHTML = DATA.destinations.map(d=>`
+    <div class="dest-card" data-reveal>
+      <div class="dest-img-wrap">
+        <div class="dest-img" style="background:linear-gradient(135deg,${d.grad});display:flex;align-items:center;justify-content:center">
+          <i class="${d.icon}" style="font-size:3.5rem;color:rgba(255,255,255,.4)"></i>
         </div>
-      `
-      )
-      .join("");
-  }
-
-  if (searchBtn) {
-    searchBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-
-      const from = fromInput.value.trim();
-      const to = toInput.value.trim();
-      const depart = departInput.value;
-
-      // Basic validation
-      if (!from || !to || !depart) {
-        // UPGRADE: Inline shake animation to draw attention to empty fields
-        [fromInput, toInput, departInput].forEach((input) => {
-          if (!input.value.trim()) {
-            input.style.borderColor = "#e74c3c";
-            setTimeout(() => {
-              input.style.borderColor = "";
-            }, 1500);
-          }
-        });
-        resultsSection.style.display = "none";
-        emptyState.style.display = "none";
-        return;
-      }
-
-      if (from.toLowerCase() === to.toLowerCase()) {
-        emptyState.querySelector("p").textContent =
-          "Departure and destination cities cannot be the same.";
-        emptyState.style.display = "block";
-        resultsSection.style.display = "none";
-        return;
-      }
-
-      // Simulate a brief loading state for realism
-      searchBtn.disabled = true;
-      const originalHTML = searchBtn.innerHTML;
-      searchBtn.innerHTML = '<i class="ri-loader-4-line"></i> Searching...';
-
-      setTimeout(() => {
-        const flights = generateFlights(from, to);
-        renderFlights(flights);
-        resultsSection.style.display = "block";
-        emptyState.style.display = "none";
-        resultsSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
-
-        searchBtn.disabled = false;
-        searchBtn.innerHTML = originalHTML;
-      }, 700);
-    });
-  }
-})();
-
-/* ============================================================
-   8. CONTACT FORM VALIDATION & SUBMISSION
-   UPGRADE: Client-side validation + simulated submission.
-   To make this send real emails, connect to EmailJS
-   (https://www.emailjs.com) — free tier available.
-   ============================================================ */
-(function initContactForm() {
-  const form = document.getElementById("contact-form");
-  if (!form) return;
-
-  const nameInput = document.getElementById("contact-name");
-  const emailInput = document.getElementById("contact-email");
-  const subjectInput = document.getElementById("contact-subject");
-  const messageInput = document.getElementById("contact-message");
-
-  const nameError = document.getElementById("name-error");
-  const emailError = document.getElementById("email-error");
-  const subjectError = document.getElementById("subject-error");
-  const messageError = document.getElementById("message-error");
-
-  const submitBtn = document.getElementById("contact-submit");
-  const submitText = document.getElementById("submit-text");
-  const submitLoading = document.getElementById("submit-loading");
-  const formSuccess = document.getElementById("form-success");
-
-  function validateField(input, errorEl, message, validatorFn) {
-    const isValid = validatorFn(input.value.trim());
-    if (!isValid) {
-      input.classList.add("invalid");
-      errorEl.textContent = message;
-    } else {
-      input.classList.remove("invalid");
-      errorEl.textContent = "";
-    }
-    return isValid;
-  }
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const isNameValid = validateField(
-      nameInput,
-      nameError,
-      "Please enter your name",
-      (v) => v.length >= 2
-    );
-    const isEmailValid = validateField(
-      emailInput,
-      emailError,
-      "Please enter a valid email address",
-      (v) => emailRegex.test(v)
-    );
-    const isSubjectValid = validateField(
-      subjectInput,
-      subjectError,
-      "Please select a subject",
-      (v) => v.length > 0
-    );
-    const isMessageValid = validateField(
-      messageInput,
-      messageError,
-      "Message must be at least 10 characters",
-      (v) => v.length >= 10
-    );
-
-    const allValid =
-      isNameValid && isEmailValid && isSubjectValid && isMessageValid;
-
-    if (!allValid) return;
-
-    // UPGRADE: Real submission to the backend instead of a simulated delay
-    submitBtn.disabled = true;
-    submitText.style.display = "none";
-    submitLoading.style.display = "inline-flex";
-    formSuccess.style.display = "none";
-
-    try {
-      const response = awaitfetch(`${API_BASE_URL}/api/contact`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: nameInput.value.trim(),
-          email: emailInput.value.trim(),
-          subject: subjectInput.value,
-          message: messageInput.value.trim(),
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.message || "Something went wrong. Please try again.");
-      }
-
-      formSuccess.querySelector("p").textContent = data.message;
-      formSuccess.style.display = "flex";
-      form.reset();
-
-      setTimeout(() => {
-        formSuccess.style.display = "none";
-      }, 5000);
-    } catch (err) {
-      messageError.textContent = err.message;
-      messageInput.classList.add("invalid");
-    } finally {
-      submitBtn.disabled = false;
-      submitText.style.display = "inline-flex";
-      submitLoading.style.display = "none";
-    }
-  });
-
-  // Real-time validation as user types (clears error once corrected)
-  [nameInput, emailInput, messageInput].forEach((input) => {
-    input.addEventListener("input", () => {
-      input.classList.remove("invalid");
-    });
-  });
-  subjectInput.addEventListener("change", () => {
-    subjectInput.classList.remove("invalid");
-  });
-})();
-
-/* ============================================================
-   9. NEWSLETTER SUBSCRIBE HANDLER
-   (Moved from inline <script> in HTML to main.js)
-   ============================================================ */
-function handleSubscribe(e) {
-  e.preventDefault();
-  const emailField = document.getElementById("subscribe-email");
-  const msg = document.getElementById("subscribe-msg");
-  const formEl = document.getElementById("subscribe-form");
-
-  if (emailField && emailField.value) {
-    formEl.reset();
-    msg.style.display = "block";
-    setTimeout(() => {
-      msg.style.display = "none";
-    }, 4000);
-  }
-}
-
-/* ============================================================
-   11. AUTHENTICATION — Sign In / Create Account / Session
-   Talks to the Express + SQLite backend. Token is kept in
-   memory only (not localStorage) per this environment's
-   constraints — for a production deploy, store the JWT in
-   localStorage or, better, an httpOnly cookie set by the server.
-   ============================================================ */
-const Auth = (function initAuth() {
-  let currentUser = null;
-  let currentToken = null;
-
-  // ---- DOM refs ----
-  const overlay = document.getElementById("auth-overlay");
-  const closeBtn = document.getElementById("auth-close");
-  const tabs = document.querySelectorAll(".auth__tab");
-  const loginForm = document.getElementById("login-form");
-  const signupForm = document.getElementById("signup-form");
-  const loginAlert = document.getElementById("login-alert");
-  const signupAlert = document.getElementById("signup-alert");
-
-  const accountBtn = document.getElementById("account-btn");
-  const accountBtnLabel = document.getElementById("account-btn-label");
-  const navAccountLink = document.getElementById("nav-account-link");
-
-  if (!overlay || !accountBtn) return null; // page doesn't include auth UI
-
-  // ---- Modal open/close ----
-  function openModal(tab = "login") {
-    overlay.classList.add("open");
-    switchTab(tab);
-    document.body.style.overflow = "hidden";
-  }
-
-  function closeModal() {
-    overlay.classList.remove("open");
-    document.body.style.overflow = "";
-    clearAlerts();
-  }
-
-  function clearAlerts() {
-    [loginAlert, signupAlert].forEach((el) => {
-      el.classList.remove("show", "error", "success");
-      el.textContent = "";
-    });
-  }
-
-  function switchTab(tab) {
-    tabs.forEach((t) => t.classList.toggle("active", t.dataset.authTab === tab));
-    loginForm.style.display = tab === "login" ? "grid" : "none";
-    signupForm.style.display = tab === "signup" ? "grid" : "none";
-    clearAlerts();
-  }
-
-  tabs.forEach((tab) => {
-    tab.addEventListener("click", () => switchTab(tab.dataset.authTab));
-  });
-
-  closeBtn.addEventListener("click", closeModal);
-  overlay.addEventListener("click", (e) => {
-    if (e.target === overlay) closeModal();
-  });
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && overlay.classList.contains("open")) closeModal();
-  });
-
-  accountBtn.addEventListener("click", () => {
-    if (currentUser) {
-      toggleAccountDropdown();
-    } else {
-      openModal("login");
-    }
-  });
-
-  if (navAccountLink) {
-    navAccountLink.addEventListener("click", (e) => {
-      e.preventDefault();
-      if (currentUser) {
-        window.location.hash = "#search";
-      } else {
-        openModal("login");
-        document.getElementById("nav-links").classList.remove("open");
-      }
-    });
-  }
-
-  function showAlert(el, message, type) {
-    el.textContent = message;
-    el.classList.remove("error", "success");
-    el.classList.add("show", type);
-  }
-
-  // ---- Account dropdown (shown after login) ----
-  let dropdownEl = null;
-
-  function toggleAccountDropdown() {
-    if (dropdownEl) {
-      dropdownEl.classList.toggle("open");
-      return;
-    }
-    buildDropdown();
-    dropdownEl.classList.add("open");
-  }
-
-  function buildDropdown() {
-    const wrapper = document.createElement("div");
-    wrapper.className = "account__dropdown";
-    accountBtn.parentNode.insertBefore(wrapper, accountBtn);
-    wrapper.appendChild(accountBtn);
-
-    dropdownEl = document.createElement("div");
-    dropdownEl.className = "account__dropdown__menu";
-    dropdownEl.innerHTML = `
-      <div class="account__dropdown__header">
-        <strong>${escapeHtml(currentUser.fullName)}</strong>
-        <span>${escapeHtml(currentUser.email)}</span>
+        <div class="dest-overlay"><span class="dest-badge">${d.badge}</span></div>
       </div>
-      <button class="account__dropdown__item" id="dropdown-my-trips">
-        <i class="ri-bookmark-3-line"></i> My Saved Trips
-      </button>
-      <button class="account__dropdown__item danger" id="dropdown-logout">
-        <i class="ri-logout-box-line"></i> Sign Out
-      </button>
-    `;
-    wrapper.appendChild(dropdownEl);
-
-    dropdownEl.querySelector("#dropdown-my-trips").addEventListener("click", () => {
-      dropdownEl.classList.remove("open");
-      document.getElementById("search").scrollIntoView({ behavior: "smooth" });
-      loadSavedTrips();
-    });
-    dropdownEl.querySelector("#dropdown-logout").addEventListener("click", logout);
-
-    document.addEventListener("click", (e) => {
-      if (dropdownEl && !wrapper.contains(e.target)) {
-        dropdownEl.classList.remove("open");
-      }
-    });
-  }
-
-  function escapeHtml(str) {
-    const div = document.createElement("div");
-    div.textContent = str;
-    return div.innerHTML;
-  }
-
-  // ---- Update navbar UI based on auth state ----
-  function refreshAccountUI() {
-    if (currentUser) {
-      accountBtnLabel.textContent = currentUser.fullName.split(" ")[0];
-      accountBtn.querySelector("i").className = "ri-user-fill";
-      accountBtn.classList.add("logged-in");
-      if (navAccountLink) navAccountLink.textContent = "MY ACCOUNT";
-      loadSavedTrips();
-    } else {
-      accountBtnLabel.textContent = "Sign In";
-      accountBtn.querySelector("i").className = "ri-user-line";
-      accountBtn.classList.remove("logged-in");
-      if (navAccountLink) navAccountLink.textContent = "SIGN IN";
-      const panel = document.getElementById("saved-trips-panel");
-      if (panel) panel.style.display = "none";
-    }
-  }
-
-  // ---- LOGIN ----
-  loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    clearAlerts();
-
-    const email = document.getElementById("login-email").value.trim();
-    const password = document.getElementById("login-password").value;
-    const submitBtn = document.getElementById("login-submit");
-
-    setSubmitLoading(submitBtn, true);
-
-    try {
-      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await res.json();
-
-      if (!res.ok || !data.success) {
-        throw new Error(data.message || "Login failed.");
-      }
-
-      currentUser = data.user;
-      currentToken = data.token;
-      showAlert(loginAlert, data.message, "success");
-      refreshAccountUI();
-
-      setTimeout(closeModal, 800);
-    } catch (err) {
-      showAlert(loginAlert, err.message, "error");
-    } finally {
-      setSubmitLoading(submitBtn, false);
-    }
-  });
-
-  // ---- SIGNUP ----
-  signupForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    clearAlerts();
-
-    const fullName = document.getElementById("signup-name").value.trim();
-    const email = document.getElementById("signup-email").value.trim();
-    const password = document.getElementById("signup-password").value;
-    const submitBtn = document.getElementById("signup-submit");
-
-    setSubmitLoading(submitBtn, true);
-
-    try {
-      const res = await fetch(`${API_BASE_URL}/api/auth/signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fullName, email, password }),
-      });
-      const data = await res.json();
-
-      if (!res.ok || !data.success) {
-        throw new Error(data.message || "Signup failed.");
-      }
-
-      currentUser = data.user;
-      currentToken = data.token;
-      showAlert(signupAlert, data.message, "success");
-      refreshAccountUI();
-
-      setTimeout(closeModal, 800);
-    } catch (err) {
-      showAlert(signupAlert, err.message, "error");
-    } finally {
-      setSubmitLoading(submitBtn, false);
-    }
-  });
-
-  function setSubmitLoading(btn, isLoading) {
-    const text = btn.querySelector(".auth__submit__text");
-    const loading = btn.querySelector(".auth__submit__loading");
-    btn.disabled = isLoading;
-    text.style.display = isLoading ? "none" : "inline-flex";
-    loading.style.display = isLoading ? "inline-flex" : "none";
-  }
-
-  function logout() {
-    currentUser = null;
-    currentToken = null;
-    if (dropdownEl) dropdownEl.classList.remove("open");
-    refreshAccountUI();
-  }
-
-  // ---- Authenticated fetch helper ----
-  async function authFetch(url, options = {}) {
-    if (!currentToken) throw new Error("Not logged in.");
-    return fetch(url, {
-      ...options,
-      headers: {
-        ...(options.headers || {}),
-        Authorization: `Bearer ${currentToken}`,
-      },
-    });
-  }
-
-  // ---- Saved trips ----
-  async function loadSavedTrips() {
-    const panel = document.getElementById("saved-trips-panel");
-    const grid = document.getElementById("saved-trips-grid");
-    if (!panel || !currentUser) return;
-
-    try {
-  const res = await authFetch(`${API_BASE_URL}/api/bookings`);
-  const data = await res.json();
-  if (!data.success) return;
-
-  if (data.bookings.length === 0) {
-    panel.style.display = "none";
-    return;
-  }
-
-      panel.style.display = "block";
-      grid.innerHTML = data.bookings
-        .map(
-          (b) => `
-        <div class="saved__trip__card" data-id="${b.id}">
-          <div class="saved__trip__info">
-            <strong>${escapeHtml(b.from_city)} → ${escapeHtml(b.to_city)}</strong>
-            <span class="saved__trip__meta">
-              <i class="ri-calendar-line"></i> ${b.depart_date}${b.return_date ? " – " + b.return_date : ""}
-              · ${b.passengers} passenger${b.passengers > 1 ? "s" : ""}
-            </span>
-          </div>
-          <button class="saved__trip__delete" data-delete-id="${b.id}" aria-label="Remove trip">
-            <i class="ri-delete-bin-line"></i>
-          </button>
+      <div class="dest-info">
+        <div class="dest-top">
+          <div><h3 class="dest-name">${d.city}</h3><p class="dest-country"><i class="ri-map-pin-line"></i> ${d.country}</p></div>
+          <div class="dest-rating"><i class="ri-star-fill"></i> ${d.rating}</div>
         </div>
-      `
-        )
-        .join("");
+        <div class="dest-bottom">
+          <div class="dest-price"><span class="price-from">From</span><strong class="price-val">$${d.price}</strong><span class="price-unit">/ person</span></div>
+          <button class="btn-book">Book Now <i class="ri-arrow-right-line"></i></button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function buildWhy(){
+  $('#why-grid').innerHTML = DATA.why.map(w=>`
+    <div class="why-card" data-reveal>
+      <div class="why-icon"><i class="${w.icon}"></i></div>
+      <h3>${w.title}</h3><p>${w.text}</p>
+    </div>`).join('');
+}
+function buildPackages(){
+  $('#pkg-grid').innerHTML = DATA.packages.map(p=>`
+    <div class="pkg-card ${p.featured?'pkg-featured':''}" data-reveal>
+      ${p.badge?`<div class="pkg-badge">${p.badge}</div>`:''}
+      <div class="pkg-icon"><i class="${p.icon}"></i></div>
+      <h3 class="pkg-name">${p.name}</h3>
+      <p class="pkg-desc">${p.desc}</p>
+      <ul class="pkg-features">${p.features.map(f=>`<li><i class="ri-check-line"></i> ${f}</li>`).join('')}</ul>
+      <div class="pkg-footer">
+        <div class="pkg-price"><span>From</span><strong>$${p.price}</strong></div>
+        <button class="${p.btn}">Book Package</button>
+      </div>
+    </div>`).join('');
+}
+function buildReviews(){
+  $('#reviews-wrapper').innerHTML = DATA.reviews.map(r=>`
+    <div class="swiper-slide">
+      <div class="review-card">
+        <div class="review-stars">${renderStars(r.stars)}</div>
+        <p class="review-text">"${r.text}"</p>
+        <div class="review-author">
+          <div class="review-avatar">${r.name.split(' ').map(n=>n[0]).join('').slice(0,2)}</div>
+          <div><strong>${r.name}</strong><span>${r.loc}</span></div>
+        </div>
+      </div>
+    </div>`).join('');
+}
 
-      grid.querySelectorAll("[data-delete-id]").forEach((btn) => {
-        btn.addEventListener("click", () => deleteSavedTrip(btn.dataset.deleteId));
-      });
-    } catch (err) {
-      console.error("Failed to load saved trips:", err);
-    }
+/* ============ NAVBAR ============ */
+function initNav(){
+  const navbar=$('#navbar'), hamburger=$('#nav-hamburger'), navLinks=$('#nav-links'), links=$$('.nav-link');
+  window.addEventListener('scroll',()=>navbar.classList.toggle('scrolled',scrollY>20),{passive:true});
+  hamburger.addEventListener('click',()=>{const o=navLinks.classList.toggle('open');hamburger.classList.toggle('open',o);document.body.style.overflow=o?'hidden':'';});
+  navLinks.addEventListener('click',e=>{if(e.target.classList.contains('nav-link')){navLinks.classList.remove('open');hamburger.classList.remove('open');document.body.style.overflow='';}});
+  document.addEventListener('click',e=>{if(!navbar.contains(e.target)){navLinks.classList.remove('open');hamburger.classList.remove('open');document.body.style.overflow='';}});
+  const io=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting)links.forEach(l=>l.classList.toggle('active',l.getAttribute('href')===`#${en.target.id}`));}),{threshold:.35});
+  $$('section[id]').forEach(s=>io.observe(s));
+}
+
+/* ============ STARFIELD ============ */
+function initStars(){
+  const c=$('#stars');if(!c)return;
+  const n=Math.min(120,Math.floor(innerWidth*0.08));
+  let html='';
+  for(let i=0;i<n;i++){const s=Math.random()*2+0.5;
+    html+=`<div class="star" style="width:${s}px;height:${s}px;left:${Math.random()*100}%;top:${Math.random()*85}%;--dur:${2+Math.random()*4}s;--delay:${Math.random()*4}s;opacity:${0.2+Math.random()*0.5}"></div>`;}
+  c.innerHTML=html;
+}
+
+/* ============ THEME ============ */
+function initTheme(){
+  const btn=$('#theme-toggle'),icon=$('#theme-icon'),html=document.documentElement;
+  const apply=d=>{html.setAttribute('data-theme',d?'dark':'light');icon.className=d?'ri-moon-fill':'ri-sun-fill';};
+  apply(matchMedia('(prefers-color-scheme: dark)').matches);
+  btn.addEventListener('click',()=>apply(html.getAttribute('data-theme')!=='dark'));
+}
+
+/* ============ REVEAL ============ */
+function initReveal(){
+  const io=new IntersectionObserver(es=>es.forEach((en,i)=>{if(en.isIntersecting){setTimeout(()=>en.target.classList.add('visible'),i*70);io.unobserve(en.target);}}),{threshold:.12});
+  $$('[data-reveal]').forEach(el=>io.observe(el));
+}
+
+/* ============ COUNTERS ============ */
+function initCounters(){
+  const io=new IntersectionObserver(es=>es.forEach(en=>{
+    if(!en.isIntersecting)return;const el=en.target,t=+el.dataset.count,dur=1600,start=performance.now();
+    (function tick(now){const p=Math.min((now-start)/dur,1),e=1-Math.pow(1-p,3),v=Math.round(e*t);
+      el.textContent=t>=1000?v.toLocaleString():v;if(p<1)requestAnimationFrame(tick);})(start);
+    io.unobserve(el);
+  }),{threshold:.5});
+  $$('[data-count]').forEach(c=>io.observe(c));
+}
+
+/* ============ BACK TO TOP ============ */
+function initBackToTop(){
+  const btn=$('#back-to-top');
+  window.addEventListener('scroll',()=>btn.classList.toggle('visible',scrollY>500),{passive:true});
+  btn.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+}
+
+/* ============ SWIPER ============ */
+function initSwiper(){
+  if(typeof Swiper==='undefined')return;
+  new Swiper('.reviews-swiper',{slidesPerView:'auto',spaceBetween:24,loop:true,grabCursor:true,
+    autoplay:{delay:4000,disableOnInteraction:false,pauseOnMouseEnter:true},keyboard:{enabled:true},
+    pagination:{el:'.swiper-pagination',clickable:true},
+    breakpoints:{0:{slidesPerView:1},540:{slidesPerView:2},900:{slidesPerView:3}}});
+}
+
+/* ============ AUTH (client-side demo session) ============ */
+const Auth=(function(){
+  let user=null, dropdownEl=null;
+  const signinBtn=$('#signin-btn'), signinLabel=$('#signin-label');
+  const STORE='syedflights_session', TRIPS='syedflights_trips';
+  const esc=s=>{const d=document.createElement('div');d.textContent=s;return d.innerHTML;};
+
+  function load(){try{const s=JSON.parse(localStorage.getItem(STORE));if(s)setSession(s,true);}catch(e){}}
+  function setSession(u,silent){user=u;localStorage.setItem(STORE,JSON.stringify(u));refreshUI();}
+  function logout(){user=null;localStorage.removeItem(STORE);if(dropdownEl){dropdownEl.remove();dropdownEl=null;}refreshUI();const sp=$('#saved-panel');if(sp)sp.style.display='none';}
+  function refreshUI(){
+    if(!signinBtn)return;
+    if(user){signinLabel.textContent=user.fullName.split(' ')[0];signinBtn.querySelector('i').className='ri-user-fill';signinBtn.classList.add('logged-in');loadSavedTrips();}
+    else{signinLabel.textContent='Sign In';signinBtn.querySelector('i').className='ri-user-line';signinBtn.classList.remove('logged-in');}
   }
+  function getTrips(){try{return JSON.parse(localStorage.getItem(TRIPS))||[];}catch(e){return[];}}
+  function setTrips(t){localStorage.setItem(TRIPS,JSON.stringify(t));}
 
-  async function deleteSavedTrip(id) {
-    try {
-      await authFetch(`/api/bookings/${id}`, { method: "DELETE" });
-      loadSavedTrips();
-    } catch (err) {
-      console.error("Failed to delete trip:", err);
-    }
+  function buildDropdown(){
+    const wrap=document.createElement('div');wrap.className='account-dropdown';
+    signinBtn.parentNode.insertBefore(wrap,signinBtn);wrap.appendChild(signinBtn);
+    dropdownEl=document.createElement('div');dropdownEl.className='account-menu';
+    dropdownEl.innerHTML=`
+      <div class="account-menu-header"><strong>${esc(user.fullName)}</strong><span>${esc(user.email)}</span></div>
+      <button class="account-menu-item" id="menu-trips"><i class="ri-bookmark-3-line"></i> My Saved Trips</button>
+      <button class="account-menu-item danger" id="menu-logout"><i class="ri-logout-box-line"></i> Sign Out</button>`;
+    wrap.appendChild(dropdownEl);
+    $('#menu-trips').addEventListener('click',()=>{dropdownEl.classList.remove('open');$('#search').scrollIntoView({behavior:'smooth'});loadSavedTrips();});
+    $('#menu-logout').addEventListener('click',logout);
+    document.addEventListener('click',e=>{if(dropdownEl&&!wrap.contains(e.target))dropdownEl.classList.remove('open');});
   }
+  if(signinBtn)signinBtn.addEventListener('click',()=>{
+    if(user){if(!dropdownEl)buildDropdown();dropdownEl.classList.toggle('open');}else AuthModal.open('login');
+  });
 
-  async function saveTrip(tripData) {
-    if (!currentUser) {
-      openModal("login");
-      return { success: false, requiresAuth: true };
-    }
-    try {
-      const res = await authFetch("/api/bookings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(tripData),
-      });
-      const data = await res.json();
-      if (data.success) loadSavedTrips();
-      return data;
-    } catch (err) {
-      return { success: false, message: "Could not save trip." };
-    }
+  function loadSavedTrips(){
+    const panel=$('#saved-panel'),grid=$('#saved-grid');if(!panel||!user)return;
+    const trips=getTrips();
+    if(!trips.length){panel.style.display='none';return;}
+    panel.style.display='block';
+    grid.innerHTML=trips.map(b=>`
+      <div class="saved-card" data-id="${b.id}">
+        <div class="saved-card-info"><strong>${esc(b.fromCity)} → ${esc(b.toCity)}</strong>
+          <span class="saved-card-meta"><i class="ri-calendar-line"></i> ${b.departDate||'—'}${b.returnDate?' – '+b.returnDate:''} · ${b.passengers} pax</span></div>
+        <button class="saved-del" data-del="${b.id}" aria-label="Delete"><i class="ri-delete-bin-line"></i></button>
+      </div>`).join('');
+    $$('[data-del]',grid).forEach(btn=>btn.addEventListener('click',()=>{setTrips(getTrips().filter(t=>String(t.id)!==String(btn.dataset.del)));loadSavedTrips();}));
   }
-
-  // Public API used by the flight search module below
-  return {
-    isLoggedIn: () => !!currentUser,
-    getUser: () => currentUser,
-    saveTrip,
-    openModal,
-  };
+  function saveTrip(data){
+    if(!user)return{success:false,requiresAuth:true};
+    const trips=getTrips();trips.unshift({id:Date.now(),...data});setTrips(trips);loadSavedTrips();
+    return{success:true};
+  }
+  load();
+  return{setSession,saveTrip,isLoggedIn:()=>!!user};
 })();
 
-/* ============================================================
-   12. WIRE "Select" BUTTON IN FLIGHT RESULTS TO SAVE TRIP
-   Hooks into the flight search results rendered earlier and
-   makes the "Select" button actually save a trip via the API.
-   ============================================================ */
-document.addEventListener("click", async (e) => {
-  const btn = e.target.closest(".flight__book__btn");
-  if (!btn || !Auth) return;
+/* ============ AUTH MODAL ============ */
+const AuthModal=(function(){
+  const overlay=$('#auth-modal'),closeBtn=$('#modal-close'),tabs=$$('.modal-tab');
+  const loginForm=$('#login-form'),signupForm=$('#signup-form'),loginAlert=$('#login-alert'),signupAlert=$('#signup-alert');
+  function open(tab='login'){overlay.classList.add('open');switchTab(tab);document.body.style.overflow='hidden';}
+  function close(){overlay.classList.remove('open');document.body.style.overflow='';clearAlerts();}
+  function switchTab(tab){tabs.forEach(t=>t.classList.toggle('active',t.dataset.tab===tab));loginForm.style.display=tab==='login'?'grid':'none';signupForm.style.display=tab==='signup'?'grid':'none';clearAlerts();}
+  function clearAlerts(){[loginAlert,signupAlert].forEach(el=>{if(el){el.className='modal-alert';el.textContent='';}});}
+  function showAlert(el,msg,type){if(!el)return;el.className=`modal-alert show ${type}`;el.textContent=msg;}
+  function setLoading(form,l){const b=form.querySelector('[type="submit"]');if(!b)return;b.disabled=l;b.querySelector('.btn-text').style.display=l?'none':'inline-flex';b.querySelector('.btn-loading').style.display=l?'inline-flex':'none';}
+  closeBtn.addEventListener('click',close);
+  overlay.addEventListener('click',e=>{if(e.target===overlay)close();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
+  tabs.forEach(t=>t.addEventListener('click',()=>switchTab(t.dataset.tab)));
 
-  const card = btn.closest(".flight__result");
-  if (!card) return;
-
-  const from = document.getElementById("search-from")?.value || "";
-  const to = document.getElementById("search-to")?.value || "";
-  const depart = document.getElementById("search-depart")?.value || "";
-  const returnDate = document.getElementById("search-return")?.value || "";
-  const passengers = document.getElementById("search-passengers")?.value || 1;
-
-  const originalText = btn.textContent;
-  btn.textContent = "Saving...";
-  btn.disabled = true;
-
-  const result = await Auth.saveTrip({
-    fromCity: from,
-    toCity: to,
-    departDate: depart,
-    returnDate: returnDate || null,
-    passengers: Number(passengers),
+  loginForm.addEventListener('submit',e=>{
+    e.preventDefault();clearAlerts();
+    const email=$('#l-email').value.trim();setLoading(loginForm,true);
+    setTimeout(()=>{
+      Auth.setSession({fullName:email.split('@')[0].replace(/[._]/g,' ').replace(/\b\w/g,c=>c.toUpperCase()),email});
+      showAlert(loginAlert,'Welcome back! Signing you in…','success');setLoading(loginForm,false);setTimeout(close,800);
+    },800);
   });
+  signupForm.addEventListener('submit',e=>{
+    e.preventDefault();clearAlerts();
+    const fullName=$('#s-name').value.trim(),email=$('#s-email').value.trim();setLoading(signupForm,true);
+    setTimeout(()=>{
+      Auth.setSession({fullName,email});
+      showAlert(signupAlert,'Account created! Welcome aboard ✈','success');setLoading(signupForm,false);setTimeout(close,800);
+    },800);
+  });
+  return{open,close};
+})();
 
-  if (result.success) {
-    btn.textContent = "Saved ✓";
-    btn.classList.add("saved");
-  } else if (result.requiresAuth) {
-    btn.textContent = originalText;
-  } else {
-    btn.textContent = "Try Again";
-    setTimeout(() => (btn.textContent = originalText), 1500);
+/* ============ FLIGHT SEARCH ============ */
+function initSearch(){
+  const tabs=$$('.stab'),returnFld=$('#return-field'),fromIn=$('#sf-from'),toIn=$('#sf-to'),
+        departIn=$('#sf-depart'),returnIn=$('#sf-return'),swapBtn=$('#swap-btn'),searchBtn=$('#search-btn'),
+        panel=$('#results-panel'),grid=$('#results-grid'),empty=$('#results-empty'),closeBtn=$('#results-close');
+  const today=new Date().toISOString().split('T')[0];
+  if(departIn)departIn.min=today;if(returnIn)returnIn.min=today;
+
+  tabs.forEach(tab=>tab.addEventListener('click',()=>{tabs.forEach(t=>t.classList.remove('active'));tab.classList.add('active');if(returnFld)returnFld.style.display=tab.dataset.trip==='roundtrip'?'flex':'none';}));
+  swapBtn.addEventListener('click',()=>{const t=fromIn.value;fromIn.value=toIn.value;toIn.value=t;});
+
+  const AIRLINES=[{name:'SyedFlights Air',icon:'ri-flight-takeoff-line'},{name:'Sky Express',icon:'ri-plane-line'},{name:'Global Wings',icon:'ri-flight-land-line'},{name:'Horizon Air',icon:'ri-flight-takeoff-line'}];
+  const gen=(f,t)=>AIRLINES.map((a,i)=>({airline:a.name,icon:a.icon,from:f,to:t,
+    departs:`${8+i*3}:${i%2===0?'00':'30'}`,arrives:`${14+i*2}:${i%2===0?'45':'15'}`,
+    duration:`${5+i}h ${i*15}m`,stops:i===0?'Non-stop':`${i} stop${i>1?'s':''}`,price:249+i*130+Math.floor(Math.random()*60)}));
+
+  function render(flights){
+    grid.innerHTML=flights.map((f,i)=>`
+      <div class="flight-card">
+        <div class="flight-info">
+          <div class="flight-airline"><i class="${f.icon}"></i> ${f.airline}</div>
+          <div class="flight-route"><span>${f.from.split('(')[0].trim()}</span><span class="flight-route-line"></span><span>${f.to.split('(')[0].trim()}</span></div>
+          <div class="flight-meta"><i class="ri-time-line"></i> ${f.departs} – ${f.arrives} · ${f.duration} · ${f.stops}</div>
+        </div>
+        <div class="flight-price-col">
+          <div style="text-align:right"><div class="flight-price-label">From</div><div class="flight-price">$${f.price}</div><div class="flight-price-label">per person</div></div>
+          <button class="btn-select" data-idx="${i}">Select</button>
+        </div>
+      </div>`).join('');
+    $$('.btn-select',grid).forEach(btn=>btn.addEventListener('click',()=>{
+      const f=flights[+btn.dataset.idx];
+      const r=Auth.saveTrip({fromCity:f.from,toCity:f.to,departDate:departIn.value,returnDate:returnIn?.value||null,passengers:+$('#sf-pax').value||1});
+      if(r.success){btn.textContent='Saved ✓';btn.classList.add('saved');}
+      else if(r.requiresAuth)AuthModal.open('login');
+    }));
   }
-  btn.disabled = false;
+
+  searchBtn.addEventListener('click',()=>{
+    const from=fromIn.value.trim(),to=toIn.value.trim(),depart=departIn.value;
+    [fromIn,toIn,departIn].forEach(inp=>{const e=!inp.value.trim();inp.style.borderColor=e?'var(--danger)':'';setTimeout(()=>inp.style.borderColor='',1800);});
+    if(!from||!to||!depart)return;
+    if(from.toLowerCase()===to.toLowerCase()){empty.querySelector('p').textContent='Departure and destination cannot be the same.';empty.style.display='block';grid.innerHTML='';panel.style.display='block';return;}
+    const orig=searchBtn.innerHTML;searchBtn.innerHTML='<i class="ri-loader-4-line spin"></i> Searching…';searchBtn.disabled=true;
+    setTimeout(()=>{render(gen(from,to));empty.style.display='none';panel.style.display='block';panel.scrollIntoView({behavior:'smooth',block:'nearest'});searchBtn.innerHTML=orig;searchBtn.disabled=false;},700);
+  });
+  closeBtn.addEventListener('click',()=>panel.style.display='none');
+}
+
+/* ============ CONTACT FORM ============ */
+function initContact(){
+  const form=$('#contact-form'),alert=$('#contact-alert'),success=$('#contact-success');if(!form)return;
+  const fields={
+    name:{el:$('#c-name'),err:$('#c-name-err'),v:v=>v.trim().length>=2},
+    email:{el:$('#c-email'),err:$('#c-email-err'),v:v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)},
+    subject:{el:$('#c-subject'),err:$('#c-subject-err'),v:v=>v.length>0},
+    message:{el:$('#c-message'),err:$('#c-message-err'),v:v=>v.trim().length>=10},
+  };
+  const msg={name:'Please enter your name (min. 2 characters)',email:'Please enter a valid email address',subject:'Please select a subject',message:'Message must be at least 10 characters'};
+  Object.values(fields).forEach(({el,err})=>el.addEventListener('input',()=>{err.textContent='';el.closest('.field-wrap').style.borderColor='';}));
+  form.addEventListener('submit',e=>{
+    e.preventDefault();if(alert){alert.className='modal-alert';alert.textContent='';}if(success)success.style.display='none';
+    let ok=true;
+    Object.entries(fields).forEach(([k,{el,err,v}])=>{if(!v(el.value)){err.textContent=msg[k];el.closest('.field-wrap').style.borderColor='var(--danger)';ok=false;}});
+    if(!ok)return;
+    const b=form.querySelector('[type="submit"]');b.disabled=true;b.querySelector('.btn-text').style.display='none';b.querySelector('.btn-loading').style.display='inline-flex';
+    setTimeout(()=>{form.reset();if(success){success.style.display='flex';setTimeout(()=>success.style.display='none',6000);}b.disabled=false;b.querySelector('.btn-text').style.display='inline-flex';b.querySelector('.btn-loading').style.display='none';},900);
+  });
+}
+
+/* ============ NEWSLETTER ============ */
+function initNewsletter(){
+  ['#newsletter-form','#footer-nl'].forEach(sel=>{
+    const form=$(sel);if(!form)return;
+    form.addEventListener('submit',e=>{e.preventDefault();const s=form.parentElement.querySelector('.nl-success')||$('#nl-success');form.reset();if(s){s.style.display='flex';setTimeout(()=>s.style.display='none',4000);}});
+  });
+}
+
+/* ============ DESTINATION "Book Now" ============ */
+function initBookNow(){
+  document.addEventListener('click',e=>{
+    const btn=e.target.closest('.btn-book');if(!btn)return;
+    const city=btn.closest('.dest-card')?.querySelector('.dest-name')?.textContent||'';
+    const toIn=$('#sf-to');if(toIn&&city)toIn.value=city;
+    $('#search').scrollIntoView({behavior:'smooth'});setTimeout(()=>$('#sf-from')?.focus(),600);
+  });
+}
+
+/* ============ BOOT ============ */
+document.addEventListener('DOMContentLoaded',()=>{
+  buildDestinations();buildWhy();buildPackages();buildReviews();
+  initNav();initStars();initTheme();initReveal();initCounters();initBackToTop();
+  initSwiper();initSearch();initContact();initNewsletter();initBookNow();
 });
