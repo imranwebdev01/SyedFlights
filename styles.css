@@ -302,10 +302,12 @@ input,select,textarea{font-family:var(--font-body);outline:none;border:none}
 .stab{display:inline-flex;align-items:center;gap:6px;padding:.55rem 1.15rem;background:none;color:var(--text-2);font-size:.85rem;font-weight:600;border-radius:2rem;border:1px solid transparent;transition:all var(--t-fast)}
 .stab.active{background:var(--grad-gold);color:#1A1206}
 .stab:not(.active):hover{border-color:var(--glass-edge);color:var(--text-1)}
-.search-fields{display:grid;grid-template-columns:1.6fr 38px 1.6fr 1.8fr 1.6fr auto;;gap:.75rem;align-items:end}
+.search-fields{display:grid;grid-template-columns:3fr 38px 3fr 2fr 2fr auto;;gap:.75rem;align-items:end}
 .sfield input,
 .sfield select{
-  min-width:140px;
+    width:100%;
+    min-width:180px;
+};
 }
 .sfield{display:flex;flex-direction:column;gap:.4rem}
 .sfield label{font-size:.72rem;font-weight:700;color:var(--text-2);letter-spacing:.05em;text-transform:uppercase;display:flex;align-items:center;gap:5px}
