@@ -568,8 +568,8 @@ input,select,textarea{font-family:var(--font-body);outline:none;border:none}
   }
   .hero-image{max-width:100%}
 
-  .search-glass{width:130%;max-width:700px}
-  .results-panel,.saved-panel{max-width:700px}
+  .search-glass{width:150%;max-width:1210px}
+  .results-panel,.saved-panel{max-width:1210px}
 
   /* Grids */
   .dest-grid{grid-template-columns:repeat(2,1fr)}
