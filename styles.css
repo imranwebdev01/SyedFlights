@@ -189,7 +189,7 @@ input,select,textarea{font-family:var(--font-body);outline:none;border:none}
 .hero-image{
   position:absolute;
   right:0;
-  top:50%;
+  top:42%;
   transform:translateY(-50%);
   width:45%;
   max-width:680px;
@@ -744,29 +744,6 @@ input,select,textarea{font-family:var(--font-body);outline:none;border:none}
 
 .dest-bottom{
     margin-top:auto;
-}@media (max-width:768px){
-
-  .hero-image{
-    width:70% !important;
-    max-width:260px !important;
-    right:-12% !important;
-    top:120px !important;
-    transform:none !important;
-    opacity:.30 !important;
-    z-index:1 !important;
-  }
-
-  .hero-content{
-    text-align:center;
-    max-width:100%;
-  }
-
-  .hero-title,
-  .hero-sub,
-  .hero-cta{
-    position:relative;
-    z-index:5;
-  }
 }
 
 html,
