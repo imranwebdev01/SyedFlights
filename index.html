@@ -109,109 +109,130 @@
 
 <!-- ===================== HERO ===================== -->
 <section class="hero" id="home" aria-label="Hero">
+
+  <!-- Background decorations -->
   <div class="hero-bg" aria-hidden="true">
-    <div class="stars" id="stars"></div>
-    <div class="hero-aurora"></div>
     <div class="hero-gradient"></div>
+    <div class="hero-aurora"></div>
+    <div class="stars" id="stars"></div>
+    <!-- Animated flying plane icon -->
     <div class="hero-plane"><i class="ri-flight-takeoff-fill"></i></div>
-    <img src="assets/header.png" alt="" class="hero-image" aria-hidden="true">
   </div>
 
-  <div class="hero-content">
-    <p class="hero-eyebrow"><span class="eyebrow-line" aria-hidden="true"></span>Premium Global Travel<span class="eyebrow-line" aria-hidden="true"></span></p>
-    <h1 class="hero-title">The Sky Is Not<br /><em>The Limit.</em></h1>
-    <p class="hero-sub">Discover extraordinary destinations with SyedFlights — where every journey is first class.</p>
+  <!-- Main hero body: content left + plane image right -->
+  <div class="hero-body">
 
-    <div class="hero-cta">
-      <a href="#search" class="btn-primary"><i class="ri-search-2-line" aria-hidden="true"></i> Search Flights</a>
-      <a href="#packages" class="btn-ghost"><i class="ri-gift-line" aria-hidden="true"></i> View Packages</a>
+    <!-- Left: text + search -->
+    <div class="hero-content">
+      <p class="hero-eyebrow">
+        <span class="eyebrow-line" aria-hidden="true"></span>
+        Premium Global Travel
+        <span class="eyebrow-line" aria-hidden="true"></span>
+      </p>
+      <h1 class="hero-title">The Sky Is Not<br /><em>The Limit.</em></h1>
+      <p class="hero-sub">Discover extraordinary destinations with SyedFlights — where every journey is first class.</p>
+
+      <div class="hero-cta">
+        <a href="#search" class="btn-primary"><i class="ri-search-2-line" aria-hidden="true"></i> Search Flights</a>
+        <a href="#packages" class="btn-ghost"><i class="ri-gift-line" aria-hidden="true"></i> View Packages</a>
+      </div>
+
+      <!-- Search Form -->
+      <div class="search-glass" id="search" role="search" aria-label="Flight search">
+        <div class="search-tabs" role="group" aria-label="Trip type">
+          <button class="stab active" data-trip="oneway"><i class="ri-arrow-right-line" aria-hidden="true"></i> One Way</button>
+          <button class="stab" data-trip="roundtrip"><i class="ri-arrow-left-right-line" aria-hidden="true"></i> Round Trip</button>
+          <button class="stab" data-trip="multi"><i class="ri-route-line" aria-hidden="true"></i> Multi-City</button>
+        </div>
+        <div class="search-fields">
+          <div class="sfield">
+            <label for="sf-from"><i class="ri-flight-takeoff-line" aria-hidden="true"></i> From</label>
+            <input type="text" id="sf-from" placeholder="New York (JFK)" list="city-list" autocomplete="off" />
+          </div>
+          <button type="button" class="swap-cities" id="swap-btn" aria-label="Swap departure and destination">
+            <i class="ri-arrow-left-right-line" aria-hidden="true"></i>
+          </button>
+          <div class="sfield">
+            <label for="sf-to"><i class="ri-flight-land-line" aria-hidden="true"></i> To</label>
+            <input type="text" id="sf-to" placeholder="London (LHR)" list="city-list" autocomplete="off" />
+          </div>
+          <div class="sfield">
+            <label for="sf-depart"><i class="ri-calendar-event-line" aria-hidden="true"></i> Depart</label>
+            <input type="date" id="sf-depart" />
+          </div>
+          <div class="sfield" id="return-field" style="display:none">
+            <label for="sf-return"><i class="ri-calendar-check-line" aria-hidden="true"></i> Return</label>
+            <input type="date" id="sf-return" />
+          </div>
+          <div class="sfield">
+            <label for="sf-pax"><i class="ri-group-line" aria-hidden="true"></i> Passengers</label>
+            <select id="sf-pax" aria-label="Number of passengers">
+              <option value="1">1 Passenger</option>
+              <option value="2">2 Passengers</option>
+              <option value="3">3 Passengers</option>
+              <option value="4">4 Passengers</option>
+              <option value="5">5+ Passengers</option>
+            </select>
+          </div>
+          <button type="button" class="btn-search" id="search-btn" aria-label="Search Flights">
+            <i class="ri-search-line" aria-hidden="true"></i> Search
+          </button>
+        </div>
+        <datalist id="city-list">
+          <option value="New York (JFK)"></option>
+          <option value="London (LHR)"></option>
+          <option value="Dubai (DXB)"></option>
+          <option value="Paris (CDG)"></option>
+          <option value="Tokyo (NRT)"></option>
+          <option value="Singapore (SIN)"></option>
+          <option value="Bali (DPS)"></option>
+          <option value="Istanbul (IST)"></option>
+          <option value="Karachi (KHI)"></option>
+          <option value="Lahore (LHE)"></option>
+          <option value="Islamabad (ISB)"></option>
+          <option value="Sydney (SYD)"></option>
+          <option value="Toronto (YYZ)"></option>
+        </datalist>
+      </div>
+
+      <!-- Results panel -->
+      <div class="results-panel" id="results-panel" style="display:none" aria-live="polite" aria-label="Flight results">
+        <div class="results-header">
+          <h3 id="results-title">Available Flights</h3>
+          <button class="results-close" id="results-close"><i class="ri-close-line" aria-hidden="true"></i> Close</button>
+        </div>
+        <div class="results-grid" id="results-grid"></div>
+        <div class="results-empty" id="results-empty" style="display:none">
+          <i class="ri-flight-takeoff-line" aria-hidden="true"></i>
+          <p>No flights found. Try different cities or dates.</p>
+        </div>
+      </div>
+
+      <!-- Saved trips panel -->
+      <div class="saved-panel" id="saved-panel" style="display:none">
+        <h3 class="saved-title"><i class="ri-bookmark-3-fill" aria-hidden="true"></i> My Saved Trips</h3>
+        <div class="saved-grid" id="saved-grid"></div>
+      </div>
+    </div><!-- /hero-content -->
+
+    <!-- Right: Plane image — shown on all screen sizes -->
+    <div class="hero-image-wrap" aria-hidden="true">
+      <img src="assets/header.png" alt="" class="hero-image" />
     </div>
 
-    <!-- Search Form -->
-    <div class="search-glass" id="search" role="search" aria-label="Flight search">
-      <div class="search-tabs" role="group" aria-label="Trip type">
-        <button class="stab active" data-trip="oneway"><i class="ri-arrow-right-line" aria-hidden="true"></i> One Way</button>
-        <button class="stab" data-trip="roundtrip"><i class="ri-arrow-left-right-line" aria-hidden="true"></i> Round Trip</button>
-        <button class="stab" data-trip="multi"><i class="ri-route-line" aria-hidden="true"></i> Multi-City</button>
-      </div>
-      <div class="search-fields">
-        <div class="sfield">
-          <label for="sf-from"><i class="ri-flight-takeoff-line" aria-hidden="true"></i> From</label>
-          <input type="text" id="sf-from" placeholder="New York (JFK)" list="city-list" autocomplete="off" />
-        </div>
-        <button
-  type="button"
-  class="swap-cities"
-  id="swap-btn"
-  aria-label="Swap departure and destination">
-  <i class="ri-arrow-left-right-line" aria-hidden="true"></i>
-</button>
-        <div class="sfield">
-          <label for="sf-to"><i class="ri-flight-land-line" aria-hidden="true"></i> To</label>
-          <input type="text" id="sf-to" placeholder="London (LHR)" list="city-list" autocomplete="off" />
-        </div>
-        <div class="sfield">
-          <label for="sf-depart"><i class="ri-calendar-event-line" aria-hidden="true"></i> Depart</label>
-          <input type="date" id="sf-depart" />
-        </div>
-        <div class="sfield" id="return-field" style="display:none">
-          <label for="sf-return"><i class="ri-calendar-check-line" aria-hidden="true"></i> Return</label>
-          <input type="date" id="sf-return" />
-        </div>
-        <div class="sfield">
-          <label for="sf-pax"><i class="ri-group-line" aria-hidden="true"></i> Passengers</label>
-          <select id="sf-pax" aria-label="Number of passengers">
-            <option value="1">1 Passenger</option>
-            <option value="2">2 Passengers</option>
-            <option value="3">3 Passengers</option>
-            <option value="4">4 Passengers</option>
-            <option value="5">5+ Passengers</option>
-          </select>
-        </div>
-        <button type="button" class="btn-search" id="search-btn" aria-label="Search Flights"><i class="ri-search-line" aria-hidden="true"></i> Search</button>
-      </div>
-      <datalist id="city-list">
-        <option value="New York (JFK)"></option>
-        <option value="London (LHR)"></option>
-        <option value="Dubai (DXB)"></option>
-        <option value="Paris (CDG)"></option>
-        <option value="Tokyo (NRT)"></option>
-        <option value="Singapore (SIN)"></option>
-        <option value="Bali (DPS)"></option>
-        <option value="Istanbul (IST)"></option>
-        <option value="Karachi (KHI)"></option>
-        <option value="Lahore (LHE)"></option>
-        <option value="Islamabad (ISB)"></option>
-        <option value="Sydney (SYD)"></option>
-        <option value="Toronto (YYZ)"></option>
-      </datalist>
-    </div>
+  </div><!-- /hero-body -->
 
-    <div class="results-panel" id="results-panel" style="display:none" aria-live="polite" aria-label="Flight results">
-      <div class="results-header">
-        <h3 id="results-title">Available Flights</h3>
-        <button class="results-close" id="results-close"><i class="ri-close-line" aria-hidden="true"></i> Close</button>
-      </div>
-      <div class="results-grid" id="results-grid"></div>
-      <div class="results-empty" id="results-empty" style="display:none">
-        <i class="ri-flight-takeoff-line" aria-hidden="true"></i>
-        <p>No flights found. Try different cities or dates.</p>
-      </div>
-    </div>
-
-    <div class="saved-panel" id="saved-panel" style="display:none">
-      <h3 class="saved-title"><i class="ri-bookmark-3-fill" aria-hidden="true"></i> My Saved Trips</h3>
-      <div class="saved-grid" id="saved-grid"></div>
-    </div>
-  </div>
-
+  <!-- Stats bar -->
   <div class="hero-stats" aria-label="Key statistics">
-    <div class="hstat"><strong>180+</strong><span>Destinations</span></div>
-    <div class="hstat-divider" aria-hidden="true"></div>
-    <div class="hstat"><strong>50K+</strong><span>Happy Travelers</span></div>
-    <div class="hstat-divider" aria-hidden="true"></div>
-    <div class="hstat"><strong>4.9★</strong><span>Average Rating</span></div>
+    <div class="hero-stats-inner">
+      <div class="hstat"><strong>180+</strong><span>Destinations</span></div>
+      <div class="hstat-divider" aria-hidden="true"></div>
+      <div class="hstat"><strong>50K+</strong><span>Happy Travelers</span></div>
+      <div class="hstat-divider" aria-hidden="true"></div>
+      <div class="hstat"><strong>4.9★</strong><span>Average Rating</span></div>
+    </div>
   </div>
+
 </section>
 
 <!-- ===================== DESTINATIONS ===================== -->
@@ -432,11 +453,13 @@
       </form>
     </div>
   </div>
-  <div class="footer-bar">
-    <p>&copy; 2024 SyedFlights by <strong>Syed Imran Shah</strong>. All rights reserved.</p>
-    <div class="footer-bar-links">
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Service</a>
+  <div class="container">
+    <div class="footer-bar">
+      <p>&copy; 2024 SyedFlights by <strong>Syed Imran Shah</strong>. All rights reserved.</p>
+      <div class="footer-bar-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
     </div>
   </div>
 </footer>

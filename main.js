@@ -65,7 +65,6 @@ function renderStars(n) {
   return h;
 }
 
-/* Simple HTML-escape to prevent XSS in dynamically built content */
 function esc(s) {
   const d = document.createElement('div');
   d.textContent = s;
@@ -160,12 +159,10 @@ function initNav() {
   const navLinks  = $('#nav-links');
   const links     = $$('.nav-link');
 
-  /* Scroll shadow */
   window.addEventListener('scroll', () => {
     navbar.classList.toggle('scrolled', scrollY > 20);
   }, { passive: true });
 
-  /* Hamburger toggle */
   function toggleMenu(force) {
     const open = typeof force === 'boolean' ? force : !navLinks.classList.contains('open');
     navLinks.classList.toggle('open', open);
@@ -176,23 +173,16 @@ function initNav() {
   }
 
   hamburger.addEventListener('click', () => toggleMenu());
-
-  /* Close on link click */
   navLinks.addEventListener('click', e => {
     if (e.target.classList.contains('nav-link')) toggleMenu(false);
   });
-
-  /* Close on outside click */
   document.addEventListener('click', e => {
     if (!navbar.contains(e.target)) toggleMenu(false);
   });
-
-  /* Close on Escape */
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && navLinks.classList.contains('open')) toggleMenu(false);
   });
 
-  /* Active link on scroll */
   const io = new IntersectionObserver(entries => {
     entries.forEach(en => {
       if (en.isIntersecting) {
@@ -222,7 +212,6 @@ function initTheme() {
   const icon = $('#theme-icon');
   const html = document.documentElement;
 
-  // Persist preference
   const saved = localStorage.getItem('syedflights_theme');
   const prefersDark = saved
     ? saved === 'dark'
@@ -302,7 +291,7 @@ function initSwiper() {
   });
 }
 
-/* ============ AUTH (client-side demo session) ============ */
+/* ============ AUTH ============ */
 const Auth = (function () {
   let user = null;
   let dropdownEl = null;
@@ -455,7 +444,6 @@ const AuthModal = (function () {
     overlay.classList.add('open');
     switchTab(tab);
     document.body.style.overflow = 'hidden';
-    // Focus first input for accessibility
     setTimeout(() => {
       const first = overlay.querySelector('input');
       if (first) first.focus();
@@ -466,7 +454,6 @@ const AuthModal = (function () {
     overlay.classList.remove('open');
     document.body.style.overflow = '';
     clearAlerts();
-    // Return focus to trigger
     const signinBtn = $('#signin-btn');
     if (signinBtn) signinBtn.focus();
   }
@@ -499,7 +486,6 @@ const AuthModal = (function () {
     b.disabled = l;
     b.querySelector('.btn-text').style.display   = l ? 'none' : 'inline-flex';
     b.querySelector('.btn-loading').style.display = l ? 'inline-flex' : 'none';
-    b.querySelector('.btn-loading').setAttribute('aria-hidden', 'true');
   }
 
   closeBtn.addEventListener('click', close);
@@ -561,7 +547,6 @@ function initSearch() {
   if (departIn) departIn.min = today;
   if (returnIn) returnIn.min = today;
 
-  // Update return date min when depart changes
   if (departIn && returnIn) {
     departIn.addEventListener('change', () => {
       returnIn.min = departIn.value || today;
@@ -655,10 +640,9 @@ function initSearch() {
     const to     = toIn.value.trim();
     const depart = departIn.value;
 
-    // Highlight empty fields
     [fromIn, toIn, departIn].forEach(inp => {
-      const empty = !inp.value.trim();
-      inp.style.borderColor = empty ? 'var(--danger)' : '';
+      const isEmpty = !inp.value.trim();
+      inp.style.borderColor = isEmpty ? 'var(--danger)' : '';
       setTimeout(() => inp.style.borderColor = '', 1800);
     });
 
