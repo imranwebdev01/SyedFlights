@@ -302,7 +302,12 @@ input,select,textarea{font-family:var(--font-body);outline:none;border:none}
 .stab{display:inline-flex;align-items:center;gap:6px;padding:.55rem 1.15rem;background:none;color:var(--text-2);font-size:.85rem;font-weight:600;border-radius:2rem;border:1px solid transparent;transition:all var(--t-fast)}
 .stab.active{background:var(--grad-gold);color:#1A1206}
 .stab:not(.active):hover{border-color:var(--glass-edge);color:var(--text-1)}
-.search-fields{display:grid;grid-template-columns:3fr 38px 3fr 2fr 2fr auto;;gap:.75rem;align-items:end}
+.search-fields{
+    display:grid;
+    grid-template-columns:250px 50px 250px 180px 180px 160px;
+    gap:.75rem;
+    align-items:end;
+}
 .sfield input,
 .sfield select{
     width:100%;
@@ -568,7 +573,10 @@ input,select,textarea{font-family:var(--font-body);outline:none;border:none}
   }
   .hero-image{max-width:100%}
 
-  .search-glass{width:100%;max: width 1050pxpx}
+  .search-glass{
+    width:100%;
+    max-width:1050px;
+}
   .results-panel,.saved-panel{max-width:1050px}
 
   /* Grids */
