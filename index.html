@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SyedFlights — Premium global travel. Discover extraordinary destinations with first-class service and best price guarantee." />
   <title>SyedFlights — Fly in Style</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -37,7 +38,7 @@
       <button class="btn-signin" id="signin-btn">
         <i class="ri-user-line"></i><span id="signin-label">Sign In</span>
       </button>
-      <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu">
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
         <span></span><span></span><span></span>
       </button>
     </div>
@@ -45,115 +46,115 @@
 </nav>
 
 <!-- ===================== AUTH MODAL ===================== -->
-<div class="modal-overlay" id="auth-modal">
+<div class="modal-overlay" id="auth-modal" role="dialog" aria-modal="true" aria-label="Sign in or create account">
   <div class="modal-box">
-    <button class="modal-close" id="modal-close"><i class="ri-close-line"></i></button>
+    <button class="modal-close" id="modal-close" aria-label="Close"><i class="ri-close-line"></i></button>
     <div class="modal-brand">
-      <i class="ri-flight-takeoff-fill"></i>
+      <i class="ri-flight-takeoff-fill" aria-hidden="true"></i>
       <h3>Welcome to SyedFlights</h3>
-      <p>Sign in to save trips & unlock member fares.</p>
+      <p>Sign in to save trips &amp; unlock member fares.</p>
     </div>
-    <div class="modal-tabs">
-      <button class="modal-tab active" data-tab="login">Sign In</button>
-      <button class="modal-tab" data-tab="signup">Create Account</button>
+    <div class="modal-tabs" role="tablist">
+      <button class="modal-tab active" data-tab="login" role="tab" aria-selected="true">Sign In</button>
+      <button class="modal-tab" data-tab="signup" role="tab" aria-selected="false">Create Account</button>
     </div>
 
-    <form class="modal-form" id="login-form">
+    <form class="modal-form" id="login-form" novalidate>
       <div class="field-group">
-        <label>Email</label>
-        <div class="field-wrap"><i class="ri-mail-line"></i>
-          <input type="email" id="l-email" placeholder="you@example.com" required />
+        <label for="l-email">Email</label>
+        <div class="field-wrap"><i class="ri-mail-line" aria-hidden="true"></i>
+          <input type="email" id="l-email" placeholder="you@example.com" required autocomplete="email" />
         </div>
       </div>
       <div class="field-group">
-        <label>Password</label>
-        <div class="field-wrap"><i class="ri-lock-line"></i>
-          <input type="password" id="l-password" placeholder="••••••••" required minlength="6" />
+        <label for="l-password">Password</label>
+        <div class="field-wrap"><i class="ri-lock-line" aria-hidden="true"></i>
+          <input type="password" id="l-password" placeholder="••••••••" required minlength="6" autocomplete="current-password" />
         </div>
       </div>
-      <div class="modal-alert" id="login-alert"></div>
+      <div class="modal-alert" id="login-alert" role="alert" aria-live="polite"></div>
       <button type="submit" class="btn-primary full">
-        <span class="btn-text"><i class="ri-login-circle-line"></i> Sign In</span>
-        <span class="btn-loading" style="display:none"><i class="ri-loader-4-line spin"></i> Signing in…</span>
+        <span class="btn-text"><i class="ri-login-circle-line" aria-hidden="true"></i> Sign In</span>
+        <span class="btn-loading" style="display:none" aria-hidden="true"><i class="ri-loader-4-line spin"></i> Signing in…</span>
       </button>
     </form>
 
-    <form class="modal-form" id="signup-form" style="display:none">
+    <form class="modal-form" id="signup-form" style="display:none" novalidate>
       <div class="field-group">
-        <label>Full Name</label>
-        <div class="field-wrap"><i class="ri-user-line"></i>
-          <input type="text" id="s-name" placeholder="Syed Imran Shah" required minlength="2" />
+        <label for="s-name">Full Name</label>
+        <div class="field-wrap"><i class="ri-user-line" aria-hidden="true"></i>
+          <input type="text" id="s-name" placeholder="Syed Imran Shah" required minlength="2" autocomplete="name" />
         </div>
       </div>
       <div class="field-group">
-        <label>Email</label>
-        <div class="field-wrap"><i class="ri-mail-line"></i>
-          <input type="email" id="s-email" placeholder="you@example.com" required />
+        <label for="s-email">Email</label>
+        <div class="field-wrap"><i class="ri-mail-line" aria-hidden="true"></i>
+          <input type="email" id="s-email" placeholder="you@example.com" required autocomplete="email" />
         </div>
       </div>
       <div class="field-group">
-        <label>Password</label>
-        <div class="field-wrap"><i class="ri-lock-line"></i>
-          <input type="password" id="s-password" placeholder="Min. 6 characters" required minlength="6" />
+        <label for="s-password">Password</label>
+        <div class="field-wrap"><i class="ri-lock-line" aria-hidden="true"></i>
+          <input type="password" id="s-password" placeholder="Min. 6 characters" required minlength="6" autocomplete="new-password" />
         </div>
       </div>
-      <div class="modal-alert" id="signup-alert"></div>
+      <div class="modal-alert" id="signup-alert" role="alert" aria-live="polite"></div>
       <button type="submit" class="btn-primary full">
-        <span class="btn-text"><i class="ri-user-add-line"></i> Create Account</span>
-        <span class="btn-loading" style="display:none"><i class="ri-loader-4-line spin"></i> Creating…</span>
+        <span class="btn-text"><i class="ri-user-add-line" aria-hidden="true"></i> Create Account</span>
+        <span class="btn-loading" style="display:none" aria-hidden="true"><i class="ri-loader-4-line spin"></i> Creating…</span>
       </button>
     </form>
   </div>
 </div>
 
 <!-- ===================== HERO ===================== -->
-<section class="hero" id="home">
-  <div class="hero-bg">
+<section class="hero" id="home" aria-label="Hero">
+  <div class="hero-bg" aria-hidden="true">
     <div class="stars" id="stars"></div>
     <div class="hero-aurora"></div>
     <div class="hero-gradient"></div>
     <div class="hero-plane"><i class="ri-flight-takeoff-fill"></i></div>
-    <img src="assets/header.png" alt="Airplane" class="hero-image">
+    <img src="assets/header.png" alt="" class="hero-image" aria-hidden="true">
   </div>
 
   <div class="hero-content">
-    <p class="hero-eyebrow"><span class="eyebrow-line"></span>Premium Global Travel<span class="eyebrow-line"></span></p>
+    <p class="hero-eyebrow"><span class="eyebrow-line" aria-hidden="true"></span>Premium Global Travel<span class="eyebrow-line" aria-hidden="true"></span></p>
     <h1 class="hero-title">The Sky Is Not<br /><em>The Limit.</em></h1>
     <p class="hero-sub">Discover extraordinary destinations with SyedFlights — where every journey is first class.</p>
 
     <div class="hero-cta">
-      <a href="#search" class="btn-primary"><i class="ri-search-2-line"></i> Search Flights</a>
-      <a href="#packages" class="btn-ghost"><i class="ri-gift-line"></i> View Packages</a>
+      <a href="#search" class="btn-primary"><i class="ri-search-2-line" aria-hidden="true"></i> Search Flights</a>
+      <a href="#packages" class="btn-ghost"><i class="ri-gift-line" aria-hidden="true"></i> View Packages</a>
     </div>
 
     <!-- Search Form -->
-    <div class="search-glass" id="search">
-      <div class="search-tabs">
-        <button class="stab active" data-trip="oneway"><i class="ri-arrow-right-line"></i> One Way</button>
-        <button class="stab" data-trip="roundtrip"><i class="ri-arrow-left-right-line"></i> Round Trip</button>
-        <button class="stab" data-trip="multi"><i class="ri-route-line"></i> Multi-City</button>
+    <div class="search-glass" id="search" role="search" aria-label="Flight search">
+      <div class="search-tabs" role="group" aria-label="Trip type">
+        <button class="stab active" data-trip="oneway"><i class="ri-arrow-right-line" aria-hidden="true"></i> One Way</button>
+        <button class="stab" data-trip="roundtrip"><i class="ri-arrow-left-right-line" aria-hidden="true"></i> Round Trip</button>
+        <button class="stab" data-trip="multi"><i class="ri-route-line" aria-hidden="true"></i> Multi-City</button>
       </div>
       <div class="search-fields">
         <div class="sfield">
-          <label><i class="ri-flight-takeoff-line"></i> From</label>
+          <label for="sf-from"><i class="ri-flight-takeoff-line" aria-hidden="true"></i> From</label>
           <input type="text" id="sf-from" placeholder="New York (JFK)" list="city-list" autocomplete="off" />
         </div>
-        <button class="swap-cities" id="swap-btn" aria-label="Swap"><i class="ri-arrow-left-right-line"></i></button>
+        <button class="swap-cities" id="swap-btn" aria-label="Swap departure and destination"><i class="ri-arrow-left-right-line" aria-hidden="true"></i></button>
         <div class="sfield">
-          <label><i class="ri-flight-land-line"></i> To</label>
+          <label for="sf-to"><i class="ri-flight-land-line" aria-hidden="true"></i> To</label>
           <input type="text" id="sf-to" placeholder="London (LHR)" list="city-list" autocomplete="off" />
         </div>
         <div class="sfield">
-          <label><i class="ri-calendar-event-line"></i> Depart</label>
+          <label for="sf-depart"><i class="ri-calendar-event-line" aria-hidden="true"></i> Depart</label>
           <input type="date" id="sf-depart" />
         </div>
         <div class="sfield" id="return-field" style="display:none">
-          <label><i class="ri-calendar-check-line"></i> Return</label>
+          <label for="sf-return"><i class="ri-calendar-check-line" aria-hidden="true"></i> Return</label>
           <input type="date" id="sf-return" />
         </div>
         <div class="sfield">
-          <label><i class="ri-group-line"></i> Passengers</label>
-          <select id="sf-pax">
+          <label for="sf-pax"><i class="ri-group-line" aria-hidden="true"></i> Passengers</label>
+          <select id="sf-pax" aria-label="Number of passengers">
             <option value="1">1 Passenger</option>
             <option value="2">2 Passengers</option>
             <option value="3">3 Passengers</option>
@@ -161,50 +162,57 @@
             <option value="5">5+ Passengers</option>
           </select>
         </div>
-        <button class="btn-search" id="search-btn"><i class="ri-search-line"></i> Search</button>
+        <button class="btn-search" id="search-btn"><i class="ri-search-line" aria-hidden="true"></i> Search</button>
       </div>
       <datalist id="city-list">
-        <option value="New York (JFK)"></option><option value="London (LHR)"></option>
-        <option value="Dubai (DXB)"></option><option value="Paris (CDG)"></option>
-        <option value="Tokyo (NRT)"></option><option value="Singapore (SIN)"></option>
-        <option value="Bali (DPS)"></option><option value="Istanbul (IST)"></option>
-        <option value="Karachi (KHI)"></option><option value="Lahore (LHE)"></option>
-        <option value="Islamabad (ISB)"></option><option value="Sydney (SYD)"></option>
+        <option value="New York (JFK)"></option>
+        <option value="London (LHR)"></option>
+        <option value="Dubai (DXB)"></option>
+        <option value="Paris (CDG)"></option>
+        <option value="Tokyo (NRT)"></option>
+        <option value="Singapore (SIN)"></option>
+        <option value="Bali (DPS)"></option>
+        <option value="Istanbul (IST)"></option>
+        <option value="Karachi (KHI)"></option>
+        <option value="Lahore (LHE)"></option>
+        <option value="Islamabad (ISB)"></option>
+        <option value="Sydney (SYD)"></option>
         <option value="Toronto (YYZ)"></option>
       </datalist>
     </div>
 
-    <div class="results-panel" id="results-panel" style="display:none">
+    <div class="results-panel" id="results-panel" style="display:none" aria-live="polite" aria-label="Flight results">
       <div class="results-header">
         <h3 id="results-title">Available Flights</h3>
-        <button class="results-close" id="results-close"><i class="ri-close-line"></i> Close</button>
+        <button class="results-close" id="results-close"><i class="ri-close-line" aria-hidden="true"></i> Close</button>
       </div>
       <div class="results-grid" id="results-grid"></div>
       <div class="results-empty" id="results-empty" style="display:none">
-        <i class="ri-flight-takeoff-line"></i><p>No flights found. Try different cities or dates.</p>
+        <i class="ri-flight-takeoff-line" aria-hidden="true"></i>
+        <p>No flights found. Try different cities or dates.</p>
       </div>
     </div>
 
     <div class="saved-panel" id="saved-panel" style="display:none">
-      <h3 class="saved-title"><i class="ri-bookmark-3-fill"></i> My Saved Trips</h3>
+      <h3 class="saved-title"><i class="ri-bookmark-3-fill" aria-hidden="true"></i> My Saved Trips</h3>
       <div class="saved-grid" id="saved-grid"></div>
     </div>
   </div>
 
-  <div class="hero-stats">
+  <div class="hero-stats" aria-label="Key statistics">
     <div class="hstat"><strong>180+</strong><span>Destinations</span></div>
-    <div class="hstat-divider"></div>
+    <div class="hstat-divider" aria-hidden="true"></div>
     <div class="hstat"><strong>50K+</strong><span>Happy Travelers</span></div>
-    <div class="hstat-divider"></div>
+    <div class="hstat-divider" aria-hidden="true"></div>
     <div class="hstat"><strong>4.9★</strong><span>Average Rating</span></div>
   </div>
 </section>
 
 <!-- ===================== DESTINATIONS ===================== -->
-<section class="section destinations-section" id="destinations">
+<section class="section destinations-section" id="destinations" aria-label="Popular destinations">
   <div class="container">
     <div class="section-head">
-      <p class="section-eyebrow"><i class="ri-compass-3-line"></i> Where To Next</p>
+      <p class="section-eyebrow"><i class="ri-compass-3-line" aria-hidden="true"></i> Where To Next</p>
       <h2 class="section-title">Popular <em>Destinations</em></h2>
       <p class="section-sub">Hand-picked destinations our travelers love most this season.</p>
     </div>
@@ -213,10 +221,10 @@
 </section>
 
 <!-- ===================== WHY CHOOSE US ===================== -->
-<section class="section why-section">
+<section class="section why-section" aria-label="Why choose SyedFlights">
   <div class="container">
     <div class="section-head">
-      <p class="section-eyebrow"><i class="ri-shield-star-line"></i> Why SyedFlights</p>
+      <p class="section-eyebrow"><i class="ri-shield-star-line" aria-hidden="true"></i> Why SyedFlights</p>
       <h2 class="section-title">Travel Smarter,<br /><em>Not Harder.</em></h2>
     </div>
     <div class="why-grid" id="why-grid"></div>
@@ -224,10 +232,10 @@
 </section>
 
 <!-- ===================== PACKAGES ===================== -->
-<section class="section packages-section" id="packages">
+<section class="section packages-section" id="packages" aria-label="Travel packages">
   <div class="container">
     <div class="section-head">
-      <p class="section-eyebrow"><i class="ri-suitcase-2-line"></i> Curated Experiences</p>
+      <p class="section-eyebrow"><i class="ri-suitcase-2-line" aria-hidden="true"></i> Curated Experiences</p>
       <h2 class="section-title">Travel <em>Packages</em></h2>
       <p class="section-sub">Everything included — flights, hotels, and experiences — in one seamless booking.</p>
     </div>
@@ -236,23 +244,35 @@
 </section>
 
 <!-- ===================== STATS BAND ===================== -->
-<div class="stats-band">
+<div class="stats-band" aria-label="Company statistics">
   <div class="container stats-inner">
-    <div class="stat-item" data-reveal><strong class="stat-num" data-count="180">0</strong><span class="stat-label">Destinations</span></div>
-    <div class="stat-item" data-reveal><strong class="stat-num" data-count="50000">0</strong><span class="stat-label">Happy Travelers</span></div>
-    <div class="stat-item" data-reveal><strong class="stat-num" data-count="15">0</strong><span class="stat-label">Years Experience</span></div>
-    <div class="stat-item" data-reveal><strong class="stat-num" data-count="98">0</strong><span class="stat-label">% Satisfaction</span></div>
+    <div class="stat-item" data-reveal>
+      <strong class="stat-num" data-count="180">0</strong>
+      <span class="stat-label">Destinations</span>
+    </div>
+    <div class="stat-item" data-reveal>
+      <strong class="stat-num" data-count="50000">0</strong>
+      <span class="stat-label">Happy Travelers</span>
+    </div>
+    <div class="stat-item" data-reveal>
+      <strong class="stat-num" data-count="15">0</strong>
+      <span class="stat-label">Years Experience</span>
+    </div>
+    <div class="stat-item" data-reveal>
+      <strong class="stat-num" data-count="98">0</strong>
+      <span class="stat-label">% Satisfaction</span>
+    </div>
   </div>
 </div>
 
 <!-- ===================== REVIEWS ===================== -->
-<section class="section reviews-section">
+<section class="section reviews-section" aria-label="Traveler reviews">
   <div class="container">
     <div class="section-head">
-      <p class="section-eyebrow"><i class="ri-double-quotes-l"></i> Traveler Stories</p>
+      <p class="section-eyebrow"><i class="ri-double-quotes-l" aria-hidden="true"></i> Traveler Stories</p>
       <h2 class="section-title">Loved by <em>Thousands.</em></h2>
     </div>
-    <div class="swiper reviews-swiper">
+    <div class="swiper reviews-swiper" aria-label="Review carousel">
       <div class="swiper-wrapper" id="reviews-wrapper"></div>
       <div class="swiper-pagination"></div>
     </div>
@@ -260,53 +280,78 @@
 </section>
 
 <!-- ===================== NEWSLETTER ===================== -->
-<section class="newsletter-section">
+<section class="newsletter-section" aria-label="Newsletter signup">
   <div class="container newsletter-inner">
     <div class="newsletter-text" data-reveal>
-      <p class="section-eyebrow"><i class="ri-mail-star-line"></i> Stay in the Loop</p>
+      <p class="section-eyebrow"><i class="ri-mail-star-line" aria-hidden="true"></i> Stay in the Loop</p>
       <h2 class="section-title">Exclusive Deals,<br /><em>First.</em></h2>
       <p>Join 50,000+ travelers who get our best fares and destination guides delivered weekly.</p>
     </div>
-    <form class="newsletter-form" id="newsletter-form" data-reveal>
-      <div class="nl-input-wrap"><i class="ri-mail-send-line"></i>
-        <input type="email" id="nl-email" placeholder="your@email.com" required />
+    <form class="newsletter-form" id="newsletter-form" data-reveal novalidate>
+      <div class="nl-input-wrap">
+        <i class="ri-mail-send-line" aria-hidden="true"></i>
+        <input type="email" id="nl-email" placeholder="your@email.com" required autocomplete="email" aria-label="Your email address" />
       </div>
       <button type="submit" class="btn-primary">
         <span class="btn-text">Subscribe</span>
-        <span class="btn-loading" style="display:none"><i class="ri-loader-4-line spin"></i></span>
+        <span class="btn-loading" style="display:none" aria-hidden="true"><i class="ri-loader-4-line spin"></i></span>
       </button>
-      <p class="nl-success" id="nl-success" style="display:none"><i class="ri-checkbox-circle-fill"></i> You're in! Check your inbox.</p>
+      <p class="nl-success" id="nl-success" style="display:none" role="status">
+        <i class="ri-checkbox-circle-fill" aria-hidden="true"></i> You're in! Check your inbox.
+      </p>
     </form>
   </div>
 </section>
 
 <!-- ===================== CONTACT ===================== -->
-<section class="section contact-section" id="contact">
+<section class="section contact-section" id="contact" aria-label="Contact us">
   <div class="container">
     <div class="section-head">
-      <p class="section-eyebrow"><i class="ri-customer-service-2-line"></i> Get In Touch</p>
+      <p class="section-eyebrow"><i class="ri-customer-service-2-line" aria-hidden="true"></i> Get In Touch</p>
       <h2 class="section-title">We're Here<br /><em>For You.</em></h2>
     </div>
     <div class="contact-grid">
       <div class="contact-info" data-reveal>
-        <div class="cinfo-card"><i class="ri-phone-fill"></i><div><strong>Call Us</strong><a href="tel:+923219836307">+923219836307</a></div></div>
-        <div class="cinfo-card"><i class="ri-mail-fill"></i><div><strong>Email Us</strong><a href="mailto:hello@syedflights.com">hello@syedflights.com</a></div></div>
-        <div class="cinfo-card"><i class="ri-map-pin-fill"></i><div><strong>Visit Us</strong><p>Pakistan, kpk Ilamabad</p></div></div>
-        <div class="cinfo-card"><i class="ri-time-fill"></i><div><strong>Working Hours</strong><p>Mon – Sat: 9AM – 6PM</p></div></div>
+        <div class="cinfo-card">
+          <i class="ri-phone-fill" aria-hidden="true"></i>
+          <div><strong>Call Us</strong><a href="tel:+923219836307">+92 321 983 6307</a></div>
+        </div>
+        <div class="cinfo-card">
+          <i class="ri-mail-fill" aria-hidden="true"></i>
+          <div><strong>Email Us</strong><a href="mailto:hello@syedflights.com">hello@syedflights.com</a></div>
+        </div>
+        <div class="cinfo-card">
+          <i class="ri-map-pin-fill" aria-hidden="true"></i>
+          <div><strong>Visit Us</strong><p>Islamabad, KPK, Pakistan</p></div>
+        </div>
+        <div class="cinfo-card">
+          <i class="ri-time-fill" aria-hidden="true"></i>
+          <div><strong>Working Hours</strong><p>Mon – Sat: 9AM – 6PM</p></div>
+        </div>
       </div>
-      <form class="contact-form" id="contact-form" data-reveal>
+      <form class="contact-form" id="contact-form" data-reveal novalidate>
         <div class="form-row">
-          <div class="field-group"><label>Full Name</label>
-            <div class="field-wrap"><i class="ri-user-line"></i><input type="text" id="c-name" placeholder="Enter your name" required /></div>
-            <span class="field-error" id="c-name-err"></span>
+          <div class="field-group">
+            <label for="c-name">Full Name</label>
+            <div class="field-wrap">
+              <i class="ri-user-line" aria-hidden="true"></i>
+              <input type="text" id="c-name" placeholder="Enter your name" required autocomplete="name" />
+            </div>
+            <span class="field-error" id="c-name-err" role="alert"></span>
           </div>
-          <div class="field-group"><label>Email</label>
-            <div class="field-wrap"><i class="ri-mail-line"></i><input type="email" id="c-email" placeholder="@gmail.com" required /></div>
-            <span class="field-error" id="c-email-err"></span>
+          <div class="field-group">
+            <label for="c-email">Email</label>
+            <div class="field-wrap">
+              <i class="ri-mail-line" aria-hidden="true"></i>
+              <input type="email" id="c-email" placeholder="you@gmail.com" required autocomplete="email" />
+            </div>
+            <span class="field-error" id="c-email-err" role="alert"></span>
           </div>
         </div>
-        <div class="field-group"><label>Subject</label>
-          <div class="field-wrap"><i class="ri-list-check"></i>
+        <div class="field-group">
+          <label for="c-subject">Subject</label>
+          <div class="field-wrap">
+            <i class="ri-list-check" aria-hidden="true"></i>
             <select id="c-subject" required>
               <option value="">Select a subject</option>
               <option value="booking">Flight Booking</option>
@@ -315,54 +360,84 @@
               <option value="other">Other</option>
             </select>
           </div>
-          <span class="field-error" id="c-subject-err"></span>
+          <span class="field-error" id="c-subject-err" role="alert"></span>
         </div>
-        <div class="field-group"><label>Message</label>
-          <div class="field-wrap field-wrap-ta"><textarea id="c-message" rows="5" placeholder="Tell us how we can help…" required></textarea></div>
-          <span class="field-error" id="c-message-err"></span>
+        <div class="field-group">
+          <label for="c-message">Message</label>
+          <div class="field-wrap field-wrap-ta">
+            <textarea id="c-message" rows="5" placeholder="Tell us how we can help…" required></textarea>
+          </div>
+          <span class="field-error" id="c-message-err" role="alert"></span>
         </div>
-        <div class="modal-alert" id="contact-alert"></div>
+        <div class="modal-alert" id="contact-alert" role="alert" aria-live="polite"></div>
         <button type="submit" class="btn-primary full">
-          <span class="btn-text"><i class="ri-send-plane-fill"></i> Send Message</span>
-          <span class="btn-loading" style="display:none"><i class="ri-loader-4-line spin"></i> Sending…</span>
+          <span class="btn-text"><i class="ri-send-plane-fill" aria-hidden="true"></i> Send Message</span>
+          <span class="btn-loading" style="display:none" aria-hidden="true"><i class="ri-loader-4-line spin"></i> Sending…</span>
         </button>
-        <div class="form-success" id="contact-success" style="display:none"><i class="ri-checkbox-circle-fill"></i> Message sent! We'll reply within 24 hours.</div>
+        <div class="form-success" id="contact-success" style="display:none" role="status">
+          <i class="ri-checkbox-circle-fill" aria-hidden="true"></i> Message sent! We'll reply within 24 hours.
+        </div>
       </form>
     </div>
   </div>
 </section>
 
 <!-- ===================== FOOTER ===================== -->
-<footer class="footer">
+<footer class="footer" aria-label="Site footer">
   <div class="container footer-grid">
     <div class="footer-brand">
-      <a href="#home" class="nav-logo"><i class="ri-flight-takeoff-fill nav-logo-icon"></i>Syed<span>Flights</span></a>
+      <a href="#home" class="nav-logo">
+        <i class="ri-flight-takeoff-fill nav-logo-icon" aria-hidden="true"></i>Syed<span>Flights</span>
+      </a>
       <p>Connecting the world, one journey at a time. Premium travel experiences crafted for the modern explorer.</p>
       <div class="footer-socials">
-        <a href="#" aria-label="Facebook"><i class="ri-facebook-fill"></i></a>
-        <a href="#" aria-label="Instagram"><i class="ri-instagram-line"></i></a>
-        <a href="#" aria-label="Twitter"><i class="ri-twitter-x-line"></i></a>
-        <a href="#" aria-label="YouTube"><i class="ri-youtube-line"></i></a>
+        <a href="#" aria-label="Follow us on Facebook"><i class="ri-facebook-fill" aria-hidden="true"></i></a>
+        <a href="#" aria-label="Follow us on Instagram"><i class="ri-instagram-line" aria-hidden="true"></i></a>
+        <a href="#" aria-label="Follow us on X (Twitter)"><i class="ri-twitter-x-line" aria-hidden="true"></i></a>
+        <a href="#" aria-label="Follow us on YouTube"><i class="ri-youtube-line" aria-hidden="true"></i></a>
       </div>
     </div>
-    <div class="footer-col"><h4>Quick Links</h4>
-      <ul><li><a href="#home">Home</a></li><li><a href="#destinations">Destinations</a></li><li><a href="#search">Search Flights</a></li><li><a href="#packages">Packages</a></li><li><a href="#contact">Contact</a></li></ul>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#destinations">Destinations</a></li>
+        <li><a href="#search">Search Flights</a></li>
+        <li><a href="#packages">Packages</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
     </div>
-    <div class="footer-col"><h4>Popular Routes</h4>
-      <ul><li><a href="#">New York → London</a></li><li><a href="#">Dubai → Singapore</a></li><li><a href="#">Karachi → Toronto</a></li><li><a href="#">Lahore → Paris</a></li><li><a href="#">Islamabad → Tokyo</a></li></ul>
+    <div class="footer-col">
+      <h4>Popular Routes</h4>
+      <ul>
+        <li><a href="#">New York → London</a></li>
+        <li><a href="#">Dubai → Singapore</a></li>
+        <li><a href="#">Karachi → Toronto</a></li>
+        <li><a href="#">Lahore → Paris</a></li>
+        <li><a href="#">Islamabad → Tokyo</a></li>
+      </ul>
     </div>
-    <div class="footer-col"><h4>Newsletter</h4>
+    <div class="footer-col">
+      <h4>Newsletter</h4>
       <p>Get weekly deals straight to your inbox.</p>
-      <form class="footer-nl" id="footer-nl"><input type="email" placeholder="your@email.com" required /><button type="submit" class="btn-primary small">Go</button></form>
+      <form class="footer-nl" id="footer-nl" novalidate>
+        <input type="email" placeholder="your@email.com" required autocomplete="email" aria-label="Email for newsletter" />
+        <button type="submit" class="btn-primary small">Go</button>
+      </form>
     </div>
   </div>
   <div class="footer-bar">
     <p>&copy; 2024 SyedFlights by <strong>Syed Imran Shah</strong>. All rights reserved.</p>
-    <div class="footer-bar-links"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div>
+    <div class="footer-bar-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+    </div>
   </div>
 </footer>
 
-<button class="back-to-top" id="back-to-top" aria-label="Back to top"><i class="ri-arrow-up-line"></i></button>
+<button class="back-to-top" id="back-to-top" aria-label="Back to top">
+  <i class="ri-arrow-up-line" aria-hidden="true"></i>
+</button>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="main.js"></script>
