@@ -302,7 +302,11 @@ input,select,textarea{font-family:var(--font-body);outline:none;border:none}
 .stab{display:inline-flex;align-items:center;gap:6px;padding:.55rem 1.15rem;background:none;color:var(--text-2);font-size:.85rem;font-weight:600;border-radius:2rem;border:1px solid transparent;transition:all var(--t-fast)}
 .stab.active{background:var(--grad-gold);color:#1A1206}
 .stab:not(.active):hover{border-color:var(--glass-edge);color:var(--text-1)}
-.search-fields{display:grid;grid-template-columns:1fr 38px 1fr 1fr 1fr auto;gap:.75rem;align-items:end}
+.search-fields{display:grid;grid-template-columns:1.6fr 38px 1.6fr 1.8fr 1.6fr auto;;gap:.75rem;align-items:end}
+.sfield input,
+.sfield select{
+  min-width:140px;
+}
 .sfield{display:flex;flex-direction:column;gap:.4rem}
 .sfield label{font-size:.72rem;font-weight:700;color:var(--text-2);letter-spacing:.05em;text-transform:uppercase;display:flex;align-items:center;gap:5px}
 .sfield input,.sfield select{padding:.85rem 1rem;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:.7rem;color:var(--text-1);font-size:.95rem;transition:border-color var(--t-fast),box-shadow var(--t-fast);width:100%}
