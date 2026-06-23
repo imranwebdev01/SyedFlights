@@ -751,3 +751,15 @@ body{
     overflow-x:hidden;
     max-width:100%;
 }
+@media (max-width:768px){
+  .hero-image{
+    display:block !important;
+    opacity:1 !important;
+    visibility:visible !important;
+    width:220px !important;
+    max-width:none !important;
+    right:-20px !important;
+    top:140px !important;
+    z-index:2 !important;
+  }
+}
