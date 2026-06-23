@@ -207,7 +207,7 @@ function initNav() {
 function initStars() {
   const c = $('#stars');
   if (!c) return;
-  const n = Math.min(120, Math.floor(innerWidth * 0.08));
+  const n = window.innerWidth < 768 ? 40 : 120;
   let html = '';
   for (let i = 0; i < n; i++) {
     const s = Math.random() * 2 + 0.5;

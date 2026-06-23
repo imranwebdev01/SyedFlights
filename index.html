@@ -16,14 +16,14 @@
 <body>
 
 <!-- ===================== NAVBAR ===================== -->
-<nav class="navbar" id="navbar">
+<nav class="navbar" id="navbar" role="navigation" aria-label="Main Navigation">
   <div class="nav-inner">
     <a href="#home" class="nav-logo">
       <i class="ri-flight-takeoff-fill nav-logo-icon"></i>
       Syed<span>Flights</span>
     </a>
 
-    <ul class="nav-links" id="nav-links">
+    <ul class="nav-links" id="nav-links" aria-label="Primary Menu">
       <li><a href="#home" class="nav-link active">Home</a></li>
       <li><a href="#destinations" class="nav-link">Destinations</a></li>
       <li><a href="#search" class="nav-link">Search Flights</a></li>
@@ -139,7 +139,13 @@
           <label for="sf-from"><i class="ri-flight-takeoff-line" aria-hidden="true"></i> From</label>
           <input type="text" id="sf-from" placeholder="New York (JFK)" list="city-list" autocomplete="off" />
         </div>
-        <button class="swap-cities" id="swap-btn" aria-label="Swap departure and destination"><i class="ri-arrow-left-right-line" aria-hidden="true"></i></button>
+        <button
+  type="button"
+  class="swap-cities"
+  id="swap-btn"
+  aria-label="Swap departure and destination">
+  <i class="ri-arrow-left-right-line" aria-hidden="true"></i>
+</button>
         <div class="sfield">
           <label for="sf-to"><i class="ri-flight-land-line" aria-hidden="true"></i> To</label>
           <input type="text" id="sf-to" placeholder="London (LHR)" list="city-list" autocomplete="off" />
@@ -162,7 +168,7 @@
             <option value="5">5+ Passengers</option>
           </select>
         </div>
-        <button class="btn-search" id="search-btn"><i class="ri-search-line" aria-hidden="true"></i> Search</button>
+        <button type="button" class="btn-search" id="search-btn" aria-label="Search Flights"><i class="ri-search-line" aria-hidden="true"></i> Search</button>
       </div>
       <datalist id="city-list">
         <option value="New York (JFK)"></option>

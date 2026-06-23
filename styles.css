@@ -708,3 +708,50 @@ input,select,textarea{font-family:var(--font-body);outline:none;border:none}
   [data-reveal]{opacity:1!important;transform:none!important}
   .hero-plane{display:none}
 }
+.hero-content{
+    position:relative;
+    z-index:5;
+}
+
+@media (min-width:1025px){
+    .hero-content{
+        max-width:55%;
+    }
+
+    .hero-image{
+        width:42%;
+        right:2%;
+    }
+}.dest-card{
+    display:flex;
+    flex-direction:column;
+    height:100%;
+}
+
+.dest-info{
+    display:flex;
+    flex-direction:column;
+    flex:1;
+}
+
+.dest-bottom{
+    margin-top:auto;
+}@media (max-width:768px){
+
+    .search-fields{
+        grid-template-columns:1fr;
+    }
+
+    .btn-search{
+        width:100%;
+    }
+
+    #return-field{
+        width:100%;
+    }
+}
+html,
+body{
+    overflow-x:hidden;
+    max-width:100%;
+}
