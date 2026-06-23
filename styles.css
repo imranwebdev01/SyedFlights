@@ -575,7 +575,7 @@ input,select,textarea{font-family:var(--font-body);outline:none;border:none}
 
   .search-glass{
     width:100%;
-    max-width:900px;
+    max-width:800px;
 }
   .results-panel,.saved-panel{max-width:1050px}
 
