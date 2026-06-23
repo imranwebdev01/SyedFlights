@@ -768,7 +768,7 @@ input,select,textarea{font-family:var(--font-body);outline:none;border:none}
     z-index:5;
   }
 }
-}
+
 html,
 body{
     overflow-x:hidden;
