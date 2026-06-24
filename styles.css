@@ -85,8 +85,10 @@ input,select,textarea{font-family:var(--font-body);outline:none;border:none}
 
 /* ============================================================
    NAVBAR
+   FIX 1: overflow:hidden prevents mobile nav links from
+   bleeding above the navbar (the "Contact" overflow bug)
 ============================================================ */
-.navbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:var(--nav-h);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);background:rgba(7,11,22,.65);border-bottom:1px solid var(--border);transition:background var(--t-mid),box-shadow var(--t-mid)}
+.navbar{position:fixed;top:0;left:0;right:0;z-index:1000;height:var(--nav-h);overflow:hidden;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);background:rgba(7,11,22,.65);border-bottom:1px solid var(--border);transition:background var(--t-mid),box-shadow var(--t-mid)}
 [data-theme="light"] .navbar{background:rgba(238,243,252,.8)}
 .navbar.scrolled{box-shadow:0 6px 34px rgba(0,0,0,.35);background:rgba(7,11,22,.85)}
 [data-theme="light"] .navbar.scrolled{background:rgba(238,243,252,.95)}
@@ -289,6 +291,7 @@ input,select,textarea{font-family:var(--font-body);outline:none;border:none}
 
 /* Search inside hero content */
 .search-glass{
+  width:100%;
   background:var(--glass);
   backdrop-filter:blur(24px);
   -webkit-backdrop-filter:blur(24px);
@@ -302,13 +305,7 @@ input,select,textarea{font-family:var(--font-body);outline:none;border:none}
 .stab{display:inline-flex;align-items:center;gap:6px;padding:.55rem 1.15rem;background:none;color:var(--text-2);font-size:.85rem;font-weight:600;border-radius:2rem;border:1px solid transparent;transition:all var(--t-fast)}
 .stab.active{background:var(--grad-gold);color:#1A1206}
 .stab:not(.active):hover{border-color:var(--glass-edge);color:var(--text-1)}
-.search-fields{display:grid;grid-template-columns:3fr 38px 3fr 2fr 2fr auto;;gap:.75rem;align-items:end}
-.sfield input,
-.sfield select{
-    width:100%;
-    min-width:180px;
-};
-
+.search-fields{display:grid;grid-template-columns:3fr 38px 3fr 2fr 2fr auto;gap:.75rem;align-items:end}
 .sfield{display:flex;flex-direction:column;gap:.4rem}
 .sfield label{font-size:.72rem;font-weight:700;color:var(--text-2);letter-spacing:.05em;text-transform:uppercase;display:flex;align-items:center;gap:5px}
 .sfield input,.sfield select{padding:.85rem 1rem;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:.7rem;color:var(--text-1);font-size:.95rem;transition:border-color var(--t-fast),box-shadow var(--t-fast);width:100%}
@@ -568,8 +565,10 @@ input,select,textarea{font-family:var(--font-body);outline:none;border:none}
   }
   .hero-image{max-width:100%}
 
-  .search-glass{width:1%;max-width:700px}
-  .results-panel,.saved-panel{max-width:700px}
+  /* FIX 2: was width:1% (typo) — corrected to width:100% so the
+     search box is wide enough to contain the Search button */
+  .search-glass{width:100%;max-width:900px}
+  .results-panel,.saved-panel{max-width:900px}
 
   /* Grids */
   .dest-grid{grid-template-columns:repeat(2,1fr)}
@@ -773,7 +772,7 @@ input,select,textarea{font-family:var(--font-body);outline:none;border:none}
   .hero-image-wrap{max-width:170px}
   .hstat strong{font-size:1.15rem}
   .hstat-divider{display:none}
-  .hstat:nth-child(even){display:none} /* hide dividers via adjacent — keep all stats */
+  .hstat:nth-child(even){display:none}
 }
 
 /* ── Landscape Phones ── */
