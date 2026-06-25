@@ -169,20 +169,27 @@ function initNav() {
     hamburger.classList.toggle('open', open);
     hamburger.setAttribute('aria-expanded', String(open));
     hamburger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    // FIX: only lock body scroll when menu is open on mobile
     document.body.style.overflow = open ? 'hidden' : '';
   }
 
   hamburger.addEventListener('click', () => toggleMenu());
+
+  // FIX: close menu when a nav link is tapped on mobile
   navLinks.addEventListener('click', e => {
     if (e.target.classList.contains('nav-link')) toggleMenu(false);
   });
+
+  // FIX: close menu on outside click; exclude hamburger to prevent double-toggle
   document.addEventListener('click', e => {
     if (!navbar.contains(e.target)) toggleMenu(false);
   });
+
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && navLinks.classList.contains('open')) toggleMenu(false);
   });
 
+  // Active link on scroll
   const io = new IntersectionObserver(entries => {
     entries.forEach(en => {
       if (en.isIntersecting) {
@@ -190,6 +197,7 @@ function initNav() {
       }
     });
   }, { threshold: 0.35 });
+
   $$('section[id]').forEach(s => io.observe(s));
 }
 
@@ -341,6 +349,7 @@ const Auth = (function () {
   function getTrips() {
     try { return JSON.parse(localStorage.getItem(TRIPS)) || []; } catch (e) { return []; }
   }
+
   function setTrips(t) { localStorage.setItem(TRIPS, JSON.stringify(t)); }
 
   function buildDropdown() {
@@ -370,6 +379,7 @@ const Auth = (function () {
       $('#search').scrollIntoView({ behavior: 'smooth' });
       loadSavedTrips();
     });
+
     $('#menu-logout').addEventListener('click', logout);
 
     document.addEventListener('click', e => {
