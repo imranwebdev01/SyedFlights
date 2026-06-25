@@ -10,9 +10,9 @@ const DATA = {
     { city:'New York',  country:'United States', rating:4.8, price:299, badge:'Trending',    image:'assets/destination-1.jpg' },
     { city:'Paris',     country:'France',         rating:4.9, price:449, badge:'Most Loved',  image:'assets/destination-2.jpg' },
     { city:'Bali',      country:'Indonesia',      rating:4.7, price:389, badge:'Best Value',  image:'assets/destination-3.jpg' },
-    { city:'Dubai',     country:'UAE',            rating:4.8, price:520, badge:'Luxury',      image:'assets/destination-1.jpg' },
-    { city:'Tokyo',     country:'Japan',          rating:4.9, price:699, badge:'Exotic',      image:'assets/destination-2.jpg' },
-    { city:'Istanbul',  country:'Turkey',         rating:4.6, price:349, badge:'Hidden Gem',  image:'assets/destination-3.jpg' },
+    { city:'Dubai',     country:'UAE',            rating:4.8, price:520, badge:'Luxury',      image:'assets/destination-4.jpg' },
+    { city:'Tokyo',     country:'Japan',          rating:4.9, price:699, badge:'Exotic',      image:'assets/destination-5.jpg' },
+    { city:'Istanbul',  country:'Turkey',         rating:4.6, price:349, badge:'Hidden Gem',  image:'assets/destination-6.jpg' },
   ],
   why: [
     { icon:'ri-shield-check-fill',       title:'Secure Booking',       text:'Bank-grade encryption protects every transaction. Book with complete confidence.' },
