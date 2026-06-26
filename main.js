@@ -1,8 +1,7 @@
 /* ============================================================
    SYEDFLIGHTS — main.js
 ============================================================ */
-const $  = (s, c = document) => c.querySelector(s);
-const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+
 "use strict";
 
 // ================= API =================
