@@ -3,6 +3,19 @@
 ============================================================ */
 const $  = (s, c = document) => c.querySelector(s);
 const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+"use strict";
+
+// ================= API =================
+const API_BASE_URL =
+  location.hostname === "localhost"
+    ? "http://localhost:4000"
+    : "https://syedflights-backend-production.up.railway.app";
+
+// ================= Helpers =================
+const $ = (selector) => document.querySelector(selector);
+const $$ = (selector) => document.querySelectorAll(selector);
+
+// ...rest of your code
 
 /* ============ DATA ============ */
 const DATA = {
@@ -731,16 +744,51 @@ function initContact() {
     b.querySelector('.btn-text').style.display   = 'none';
     b.querySelector('.btn-loading').style.display = 'inline-flex';
 
-    setTimeout(() => {
-      form.reset();
-      if (success) {
-        success.style.display = 'flex';
-        setTimeout(() => success.style.display = 'none', 6000);
-      }
-      b.disabled = false;
-      b.querySelector('.btn-text').style.display   = 'inline-flex';
-      b.querySelector('.btn-loading').style.display = 'none';
-    }, 900);
+(async () => {
+
+  try {
+
+    const response = await fetch(`${API_BASE_URL}/api/contact`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: fields.name.el.value,
+        email: fields.email.el.value,
+        subject: fields.subject.el.value,
+        message: fields.message.el.value
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message);
+    }
+
+    form.reset();
+
+    if (success) {
+      success.style.display = "flex";
+      setTimeout(() => {
+        success.style.display = "none";
+      }, 6000);
+    }
+
+  } catch (err) {
+
+    alert(err.message);
+
+  } finally {
+
+    b.disabled = false;
+    b.querySelector(".btn-text").style.display = "inline-flex";
+    b.querySelector(".btn-loading").style.display = "none";
+
+  }
+
+})();
   });
 }
 
