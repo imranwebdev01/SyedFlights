@@ -769,6 +769,7 @@ try {
   });
 
   const data = await response.json();
+  console.log("Booking response:", data);
 
   if (!response.ok) {
     alert(data.message);
