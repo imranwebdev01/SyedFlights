@@ -876,6 +876,7 @@ function initContact() {
     });
 
     const data = await response.json();
+    console.log("Booking response:", data);
 
     if (!response.ok) {
       throw new Error(data.message);
