@@ -962,20 +962,20 @@ const closeBookingsModal = document.getElementById("closeBookingsModal");
 if (myBookingsBtn) {
   myBookingsBtn.addEventListener("click", (e) => {
     e.preventDefault();
-    myBookingsModal.classList.add("active");
+    myBookingsModal.classList.add("open");
   });
 }
 
 if (closeBookingsModal) {
   closeBookingsModal.addEventListener("click", () => {
-    myBookingsModal.classList.remove("active");
+    myBookingsModal.classList.remove("open");
   });
 }
 
 if (myBookingsModal) {
   myBookingsModal.addEventListener("click", (e) => {
     if (e.target === myBookingsModal) {
-      myBookingsModal.classList.remove("active");
+      myBookingsModal.classList.remove("open");
     }
   });
 }
