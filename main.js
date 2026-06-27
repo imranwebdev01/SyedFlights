@@ -731,7 +731,7 @@ function initSearch() {
     });
   }
 
-  searchBtn.addEventListener('click', () => {
+  searchBtn.addEventListener('click', async () => {
     const from   = fromIn.value.trim();
     const to     = toIn.value.trim();
     const depart = departIn.value;
@@ -743,6 +743,46 @@ function initSearch() {
     });
 
     if (!from || !to || !depart) return;
+    // User must be logged in
+const token = localStorage.getItem("token");
+
+if (!token) {
+  alert("Please sign in before booking a flight.");
+  AuthModal.open();
+  return;
+}
+
+try {
+  const response = await fetch(`${API_BASE_URL}/api/bookings`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      fromCity: from,
+      toCity: to,
+      departDate: depart,
+      returnDate: returnIn.value || null,
+      passengers: Number($("#sf-pax").value),
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    alert(data.message);
+    return;
+  }
+
+  alert(
+    `✅ Booking Successful!\n\nReference: ${data.bookingReference}`
+  );
+
+} catch (err) {
+  console.error(err);
+  alert("Booking failed.");
+}
 
     if (from.toLowerCase() === to.toLowerCase()) {
       empty.querySelector('p').textContent = 'Departure and destination cannot be the same.';
