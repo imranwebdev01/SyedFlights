@@ -955,3 +955,27 @@ document.addEventListener('DOMContentLoaded', () => {
   initNewsletter();
   initBookNow();
 });
+const myBookingsBtn = document.getElementById("myBookingsBtn");
+const myBookingsModal = document.getElementById("myBookingsModal");
+const closeBookingsModal = document.getElementById("closeBookingsModal");
+
+if (myBookingsBtn) {
+  myBookingsBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    myBookingsModal.classList.add("active");
+  });
+}
+
+if (closeBookingsModal) {
+  closeBookingsModal.addEventListener("click", () => {
+    myBookingsModal.classList.remove("active");
+  });
+}
+
+if (myBookingsModal) {
+  myBookingsModal.addEventListener("click", (e) => {
+    if (e.target === myBookingsModal) {
+      myBookingsModal.classList.remove("active");
+    }
+  });
+}
