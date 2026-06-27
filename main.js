@@ -515,37 +515,111 @@ const AuthModal = (function () {
   document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
   tabs.forEach(t => t.addEventListener('click', () => switchTab(t.dataset.tab)));
 
-  loginForm.addEventListener('submit', e => {
-    e.preventDefault();
-    clearAlerts();
-    const email = $('#l-email').value.trim();
-    if (!email) return;
-    setLoading(loginForm, true);
-    setTimeout(() => {
-      Auth.setSession({
-        fullName: email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
-        email,
-      });
-      showAlert(loginAlert, 'Welcome back! Signing you in…', 'success');
-      setLoading(loginForm, false);
-      setTimeout(close, 800);
-    }, 800);
-  });
+  loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
 
-  signupForm.addEventListener('submit', e => {
-    e.preventDefault();
-    clearAlerts();
-    const fullName = $('#s-name').value.trim();
-    const email    = $('#s-email').value.trim();
-    if (!fullName || !email) return;
-    setLoading(signupForm, true);
-    setTimeout(() => {
-      Auth.setSession({ fullName, email });
-      showAlert(signupAlert, 'Account created! Welcome aboard ✈', 'success');
+  clearAlerts();
+
+  const email = $('#l-email').value.trim();
+  const password = $('#l-password').value;
+
+  if (!email || !password) {
+    showAlert(loginAlert, "Email and password are required.", "error");
+    return;
+  }
+
+  setLoading(loginForm, true);
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email,
+        password
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      showAlert(loginAlert, data.message, "error");
+      setLoading(loginForm, false);
+      return;
+    }
+
+    localStorage.setItem("token", data.token);
+
+    Auth.setSession(data.user);
+
+    showAlert(loginAlert, "Login successful!", "success");
+
+    setLoading(loginForm, false);
+
+    setTimeout(close, 800);
+
+  } catch (err) {
+    console.error(err);
+    showAlert(loginAlert, "Unable to connect to server.", "error");
+    setLoading(loginForm, false);
+  }
+});
+  signupForm.addEventListener('submit', async (e) => {
+    console.log("Signup button clicked");
+  e.preventDefault();
+
+  clearAlerts();
+
+  const fullName = $('#s-name').value.trim();
+  const email = $('#s-email').value.trim();
+  const password = $('#s-password').value;
+
+  if (!fullName || !email || !password) {
+    showAlert(signupAlert, "All fields are required.", "error");
+    return;
+  }
+
+  setLoading(signupForm, true);
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        fullName,
+        email,
+        password
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      showAlert(signupAlert, data.message, "error");
       setLoading(signupForm, false);
-      setTimeout(close, 800);
-    }, 800);
-  });
+      return;
+    }
+
+    localStorage.setItem("token", data.token);
+
+    Auth.setSession(data.user);
+
+    showAlert(signupAlert, "Account created successfully!", "success");
+
+    setLoading(signupForm, false);
+
+    setTimeout(close, 800);
+
+  } catch (err) {
+    console.error(err);
+    showAlert(signupAlert, "Unable to connect to server.", "error");
+    setLoading(signupForm, false);
+  }
+});
 
   return { open, close };
 })();
