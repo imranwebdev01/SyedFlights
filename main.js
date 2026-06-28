@@ -983,13 +983,15 @@ async function loadMyBookings() {
       },
     });
 
-    const bookings = await response.json();
-    console.log(bookings);
+    const data = await response.json();
+    console.log(data);
 
-    if (!response.ok) {
-      container.innerHTML = `<p>${bookings.message}</p>`;
+    if (!response.ok || !data.success) {
+      container.innerHTML = `<p>${data.message}</p>`;
       return;
     }
+
+    const bookings = data.bookings;
 
     if (bookings.length === 0) {
       container.innerHTML = "<p>No bookings found.</p>";
@@ -998,10 +1000,11 @@ async function loadMyBookings() {
 
     container.innerHTML = bookings.map(b => `
       <div class="booking-card">
-        <h3>${b.fromCity} → ${b.toCity}</h3>
-        <p>Departure: ${b.departDate}</p>
+        <h3>${b.from_city} → ${b.to_city}</h3>
+        <p>Departure: ${b.depart_date}</p>
         <p>Passengers: ${b.passengers}</p>
-        <p>Reference: ${b.bookingReference}</p>
+        <p>Reference: ${b.booking_reference}</p>
+        <p>Status: ${b.status}</p>
       </div>
     `).join("");
 
@@ -1010,3 +1013,4 @@ async function loadMyBookings() {
     container.innerHTML = "<p>Unable to load bookings.</p>";
   }
 }
+  
