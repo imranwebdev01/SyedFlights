@@ -2045,3 +2045,9 @@ input, select, textarea {
   font-size:.82rem;
   font-weight:600;
 }
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:1.5rem;
+}
