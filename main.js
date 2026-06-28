@@ -1030,15 +1030,63 @@ async function loadMyBookings() {
 </div>
 
 <div class="booking-actions">
-    <button class="cancel-booking-btn" data-id="${b.id}">
-        Cancel Booking
-    </button>
+   <button
+    class="cancel-booking-btn"
+    data-id="${b.id}">
+    Cancel Booking
+</button>
 </div>
 
   </div>
 
 </div>
 `).join("");
+document.querySelectorAll(".cancel-booking-btn").forEach(button => {
+
+    button.addEventListener("click", async () => {
+
+        const bookingId = button.dataset.id;
+
+        const confirmDelete = confirm(
+            "Are you sure you want to cancel this booking?"
+        );
+
+        if (!confirmDelete) return;
+
+        try {
+
+            const response = await fetch(
+                `${API_BASE_URL}/api/bookings/${bookingId}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                alert(data.message);
+                return;
+            }
+
+            alert("Booking cancelled successfully.");
+
+            loadMyBookings();
+
+        } catch (err) {
+
+            console.error(err);
+
+            alert("Unable to cancel booking.");
+
+        }
+
+    });
+
+});
 
   } catch (err) {
     console.error(err);
