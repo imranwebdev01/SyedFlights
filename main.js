@@ -567,7 +567,6 @@ const AuthModal = (function () {
   }
 });
   signupForm.addEventListener('submit', async (e) => {
-    console.log("Signup button clicked");
   e.preventDefault();
 
   clearAlerts();
@@ -876,7 +875,6 @@ function initContact() {
     });
 
     const data = await response.json();
-    console.log("Booking response:", data);
 
     if (!response.ok) {
       throw new Error(data.message);
@@ -942,14 +940,9 @@ const myBookingsBtn = document.getElementById("myBookingsBtn");
 const myBookingsModal = document.getElementById("myBookingsModal");
 const closeBookingsModal = document.getElementById("closeBookingsModal");
 
-console.log("Button:", myBookingsBtn);
-console.log("Modal:", myBookingsModal);
-console.log("Close:", closeBookingsModal);
-
 if (myBookingsBtn && myBookingsModal) {
   myBookingsBtn.addEventListener("click", (e) => {
     e.preventDefault();
-    console.log("Opening modal...");
     loadMyBookings();
     myBookingsModal.classList.add("open");
   });
@@ -984,7 +977,6 @@ async function loadMyBookings() {
     });
 
     const data = await response.json();
-    console.log(data);
 
     if (!response.ok || !data.success) {
       container.innerHTML = `<p>${data.message}</p>`;
@@ -992,25 +984,55 @@ async function loadMyBookings() {
     }
 
     const bookings = data.bookings;
-console.log("Full response:", data);
-console.log("Bookings:", bookings);
-console.log("Is Array?", Array.isArray(bookings));
-console.log("Type:", typeof bookings);
 
     if (bookings.length === 0) {
       container.innerHTML = "<p>No bookings found.</p>";
       return;
     }
 
-    container.innerHTML = bookings.map(b => `
-      <div class="booking-card">
-        <h3>${b.from_city} → ${b.to_city}</h3>
-        <p>Departure: ${b.depart_date}</p>
-        <p>Passengers: ${b.passengers}</p>
-        <p>Reference: ${b.booking_reference}</p>
-        <p>Status: ${b.status}</p>
+   container.innerHTML = bookings.map(b => `
+<div class="booking-card">
+
+  <div class="booking-route">
+      <div class="booking-city">
+          ${b.from_city}
       </div>
-    `).join("");
+
+      <div class="booking-arrow">
+          ✈
+      </div>
+
+      <div class="booking-city">
+          ${b.to_city}
+      </div>
+  </div>
+
+  <div class="booking-info">
+
+      <div class="booking-item">
+          <span class="booking-label">Departure</span>
+          <span class="booking-value">${b.depart_date}</span>
+      </div>
+
+      <div class="booking-item">
+          <span class="booking-label">Passengers</span>
+          <span class="booking-value">${b.passengers}</span>
+      </div>
+
+      <div class="booking-item">
+          <span class="booking-label">Reference</span>
+          <span class="booking-value">${b.booking_reference}</span>
+      </div>
+
+      <div class="booking-item">
+          <span class="booking-label">Status</span>
+          <span class="booking-status">${b.status}</span>
+      </div>
+
+  </div>
+
+</div>
+`).join("");
 
   } catch (err) {
     console.error(err);

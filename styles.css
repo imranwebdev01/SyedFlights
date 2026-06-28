@@ -1976,3 +1976,72 @@ input, select, textarea {
   [data-reveal] { opacity: 1 !important; transform: none !important; }
   .hero-plane { display: none; }
 }
+/* ============================================================
+   MY BOOKINGS CARD
+============================================================ */
+
+.booking-card{
+  background: var(--sky-card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow-card);
+  transition: .3s ease;
+}
+
+.booking-card:hover{
+  transform: translateY(-3px);
+  border-color: var(--gold);
+}
+
+.booking-route{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:1rem;
+}
+
+.booking-city{
+  font-size:1.15rem;
+  font-weight:700;
+  color:var(--text-1);
+}
+
+.booking-arrow{
+  font-size:1.4rem;
+  color:var(--gold);
+}
+
+.booking-info{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:.8rem;
+  margin-top:.8rem;
+}
+
+.booking-item{
+  display:flex;
+  flex-direction:column;
+}
+
+.booking-label{
+  font-size:.75rem;
+  color:var(--text-2);
+}
+
+.booking-value{
+  font-weight:600;
+  color:var(--text-1);
+}
+
+.booking-status{
+  display:inline-block;
+  margin-top:1rem;
+  padding:.35rem .8rem;
+  border-radius:999px;
+  background:#FFD54A22;
+  color:#FFD54A;
+  font-size:.82rem;
+  font-weight:600;
+}
