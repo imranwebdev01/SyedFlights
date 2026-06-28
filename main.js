@@ -1025,9 +1025,15 @@ async function loadMyBookings() {
       </div>
 
       <div class="booking-item">
-          <span class="booking-label">Status</span>
-          <span class="booking-status">${b.status}</span>
-      </div>
+    <span class="booking-label">Status</span>
+    <span class="booking-status">${b.status}</span>
+</div>
+
+<div class="booking-actions">
+    <button class="cancel-booking-btn" data-id="${b.id}">
+        Cancel Booking
+    </button>
+</div>
 
   </div>
 

@@ -2050,4 +2050,27 @@ input, select, textarea {
     justify-content:space-between;
     align-items:center;
     margin-bottom:1.5rem;
+}/* ===========================
+   BOOKING ACTIONS
+=========================== */
+
+.booking-actions{
+    margin-top:20px;
+    text-align:right;
+}
+
+.cancel-booking-btn{
+    background:#e63946;
+    color:#fff;
+    border:none;
+    padding:10px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+    transition:.3s;
+}
+
+.cancel-booking-btn:hover{
+    background:#c1121f;
+    transform:translateY(-2px);
 }
