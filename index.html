@@ -462,33 +462,34 @@
 <button class="back-to-top" id="back-to-top" aria-label="Back to top">
   <i class="ri-arrow-up-line" aria-hidden="true"></i>
 </button>
-
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script src="main.js"></script>
 <!-- ==============================
      MY BOOKINGS MODAL
 ================================== -->
+<!-- MY BOOKINGS MODAL -->
 <div class="modal-overlay" id="myBookingsModal">
+
     <div class="modal-box">
 
-    <div class="modal-header">
-      <h2>My Bookings</h2>
+        <div class="modal-header">
+            <h2>My Bookings</h2>
 
-      <button id="closeBookingsModal">
-        ✕
-      </button>
+            <button id="closeBookingsModal">
+                ✕
+            </button>
+        </div>
+
+        <div id="bookingsContainer">
+            <p style="text-align:center;">
+                Loading bookings...
+            </p>
+        </div>
+
     </div>
-
-    <div id="bookingsContainer">
-
-      <p style="text-align:center;">
-        Loading bookings...
-      </p>
-
-    </div>
-
-  </div>
 
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="main.js"></script>
+
 </body>
 </html>

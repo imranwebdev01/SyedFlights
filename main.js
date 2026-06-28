@@ -959,20 +959,23 @@ const myBookingsBtn = document.getElementById("myBookingsBtn");
 const myBookingsModal = document.getElementById("myBookingsModal");
 const closeBookingsModal = document.getElementById("closeBookingsModal");
 
-if (myBookingsBtn) {
+console.log("Button:", myBookingsBtn);
+console.log("Modal:", myBookingsModal);
+console.log("Close:", closeBookingsModal);
+
+if (myBookingsBtn && myBookingsModal) {
   myBookingsBtn.addEventListener("click", (e) => {
     e.preventDefault();
+    console.log("Opening modal...");
     myBookingsModal.classList.add("open");
   });
 }
 
-if (closeBookingsModal) {
+if (closeBookingsModal && myBookingsModal) {
   closeBookingsModal.addEventListener("click", () => {
     myBookingsModal.classList.remove("open");
   });
-}
 
-if (myBookingsModal) {
   myBookingsModal.addEventListener("click", (e) => {
     if (e.target === myBookingsModal) {
       myBookingsModal.classList.remove("open");
