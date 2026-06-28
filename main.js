@@ -992,6 +992,10 @@ async function loadMyBookings() {
     }
 
     const bookings = data.bookings;
+console.log("Full response:", data);
+console.log("Bookings:", bookings);
+console.log("Is Array?", Array.isArray(bookings));
+console.log("Type:", typeof bookings);
 
     if (bookings.length === 0) {
       container.innerHTML = "<p>No bookings found.</p>";
