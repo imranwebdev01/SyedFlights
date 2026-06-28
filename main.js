@@ -1093,4 +1093,21 @@ document.querySelectorAll(".cancel-booking-btn").forEach(button => {
     container.innerHTML = "<p>Unable to load bookings.</p>";
   }
 }
-  
+  document.addEventListener("DOMContentLoaded", () => {
+  buildDestinations();
+  buildWhy();
+  buildPackages();
+  buildReviews();
+
+  initNav();
+  initStars();
+  initTheme();
+  initReveal();
+  initCounters();
+  initBackToTop();
+  initSwiper();
+  initSearch();
+  initContact();
+  initNewsletter();
+  initBookNow();
+});
