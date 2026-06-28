@@ -937,24 +937,7 @@ function initBookNow() {
   });
 }
 
-/* ============ BOOT ============ */
-document.addEventListener('DOMContentLoaded', () => {
-  buildDestinations();
-  buildWhy();
-  buildPackages();
-  buildReviews();
-  initNav();
-  initStars();
-  initTheme();
-  initReveal();
-  initCounters();
-  initBackToTop();
-  initSwiper();
-  initSearch();
-  initContact();
-  initNewsletter();
-  initBookNow();
-});
+
 const myBookingsBtn = document.getElementById("myBookingsBtn");
 const myBookingsModal = document.getElementById("myBookingsModal");
 const closeBookingsModal = document.getElementById("closeBookingsModal");
@@ -967,6 +950,7 @@ if (myBookingsBtn && myBookingsModal) {
   myBookingsBtn.addEventListener("click", (e) => {
     e.preventDefault();
     console.log("Opening modal...");
+    loadMyBookings();
     myBookingsModal.classList.add("open");
   });
 }
@@ -981,4 +965,47 @@ if (closeBookingsModal && myBookingsModal) {
       myBookingsModal.classList.remove("open");
     }
   });
+}
+
+async function loadMyBookings() {
+  const container = document.getElementById("bookingsContainer");
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    container.innerHTML = "<p>Please sign in first.</p>";
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/bookings`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const bookings = await response.json();
+
+    if (!response.ok) {
+      container.innerHTML = `<p>${bookings.message}</p>`;
+      return;
+    }
+
+    if (bookings.length === 0) {
+      container.innerHTML = "<p>No bookings found.</p>";
+      return;
+    }
+
+    container.innerHTML = bookings.map(b => `
+      <div class="booking-card">
+        <h3>${b.fromCity} → ${b.toCity}</h3>
+        <p>Departure: ${b.departDate}</p>
+        <p>Passengers: ${b.passengers}</p>
+        <p>Reference: ${b.bookingReference}</p>
+      </div>
+    `).join("");
+
+  } catch (err) {
+    console.error(err);
+    container.innerHTML = "<p>Unable to load bookings.</p>";
+  }
 }
