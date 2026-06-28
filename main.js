@@ -984,6 +984,7 @@ async function loadMyBookings() {
     });
 
     const bookings = await response.json();
+    console.log(bookings);
 
     if (!response.ok) {
       container.innerHTML = `<p>${bookings.message}</p>`;
