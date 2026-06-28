@@ -712,20 +712,14 @@ function initSearch() {
     $$('.btn-select', grid).forEach(btn => {
       btn.addEventListener('click', () => {
         const f = flights[+btn.dataset.idx];
-        const r = Auth.saveTrip({
-          fromCity:   f.from,
-          toCity:     f.to,
-          departDate: departIn.value,
-          returnDate: returnIn ? returnIn.value || null : null,
-          passengers: +$('#sf-pax').value || 1,
-        });
-        if (r.success) {
-          btn.textContent = 'Saved ✓';
-          btn.classList.add('saved');
-          btn.setAttribute('aria-label', 'Flight saved');
-        } else if (r.requiresAuth) {
-          AuthModal.open('login');
-        }
+        const token = localStorage.getItem("token");
+
+if (!token) {
+    AuthModal.open("login");
+    return;
+}
+
+alert("Login verified.");
       });
     });
   }
@@ -742,7 +736,7 @@ function initSearch() {
     });
 
     if (!from || !to || !depart) return;
-    // User must be logged in
+   /*// User must be logged in
 const token = localStorage.getItem("token");
 
 if (!token) {
@@ -782,7 +776,7 @@ try {
 } catch (err) {
   console.error(err);
   alert("Booking failed.");
-}
+}*/
 
     if (from.toLowerCase() === to.toLowerCase()) {
       empty.querySelector('p').textContent = 'Departure and destination cannot be the same.';
