@@ -194,7 +194,7 @@ input, select, textarea {
   filter: brightness(1.05);
 }
 
-.btn-primary.full { width: 100%; }
+.btn-primary.full  { width: 100%; }
 .btn-primary.small { padding: .6rem 1.25rem; font-size: .875rem; }
 .btn-primary:disabled { opacity: .65; cursor: not-allowed; transform: none; }
 
@@ -239,7 +239,8 @@ input, select, textarea {
   transform: translateY(-3px);
 }
 
-.btn-text, .btn-loading {
+.btn-text,
+.btn-loading {
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -276,9 +277,6 @@ input, select, textarea {
 
 /* ============================================================
    NAVBAR
-   FIX: overflow:visible keeps dropdown/menu visible;
-   z-index stacking corrected; mobile menu uses fixed
-   positioning so it never clips inside the navbar.
 ============================================================ */
 .navbar {
   position: fixed;
@@ -287,7 +285,6 @@ input, select, textarea {
   right: 0;
   z-index: 1000;
   height: var(--nav-h);
-  /* overflow:visible allows account dropdown to show */
   overflow: visible;
   backdrop-filter: blur(22px);
   -webkit-backdrop-filter: blur(22px);
@@ -312,14 +309,11 @@ input, select, textarea {
 .nav-inner {
   max-width: var(--max-w);
   margin: 0 auto;
-  /* FIX: use padding-inline to prevent overflow on small screens */
   padding: 0 1.5rem;
   height: var(--nav-h);
   display: flex;
   align-items: center;
-  /* FIX: gap reduces on small screens via media query */
   gap: 2rem;
-  /* FIX: prevent inner content from overflowing */
   min-width: 0;
 }
 
@@ -334,7 +328,6 @@ input, select, textarea {
   color: var(--text-1);
   white-space: nowrap;
   flex-shrink: 0;
-  /* FIX: ensure logo never disappears */
   min-width: 0;
 }
 
@@ -351,12 +344,10 @@ input, select, textarea {
   font-style: normal;
 }
 
-/* Desktop nav links: centred between logo and actions */
 .nav-links {
   display: flex;
   align-items: center;
   gap: .25rem;
-  /* FIX: flex:1 lets nav links fill middle space without overflow */
   flex: 1;
   justify-content: center;
 }
@@ -384,7 +375,8 @@ input, select, textarea {
   transition: width var(--t-fast), left var(--t-fast);
 }
 
-.nav-link:hover, .nav-link.active { color: var(--text-1); }
+.nav-link:hover,
+.nav-link.active { color: var(--text-1); }
 .nav-link.active::after { width: 18px; left: calc(50% - 9px); }
 
 .nav-actions {
@@ -443,7 +435,6 @@ input, select, textarea {
 }
 
 .nav-hamburger {
-  /* FIX: hidden on desktop; display:flex only on mobile via media query */
   display: none;
   flex-direction: column;
   gap: 5px;
@@ -573,6 +564,15 @@ input, select, textarea {
 
 .modal-overlay.open .modal-box { transform: translateY(0) scale(1); }
 
+/* FIX: .modal-header moved here into the modal block (was orphaned at
+   the bottom of the file between booking-card and booking-actions rules) */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
 .modal-close {
   position: absolute;
   top: 1rem;
@@ -625,7 +625,7 @@ input, select, textarea {
 .modal-form { display: grid; gap: 1.1rem; }
 
 .modal-alert { display: none; padding: .75rem 1rem; border-radius: .6rem; font-size: .85rem; }
-.modal-alert.show.error { display: block; background: rgba(224,84,84,.12); border: 1px solid rgba(224,84,84,.3); color: #FF8A8A; }
+.modal-alert.show.error   { display: block; background: rgba(224,84,84,.12); border: 1px solid rgba(224,84,84,.3); color: #FF8A8A; }
 .modal-alert.show.success { display: block; background: rgba(61,186,126,.12); border: 1px solid rgba(61,186,126,.3); color: var(--success); }
 
 /* ============================================================
@@ -738,7 +738,6 @@ input, select, textarea {
   z-index: 1;
 }
 
-/* ── Hero body: text left, image right on desktop ── */
 .hero-body {
   position: relative;
   z-index: 2;
@@ -750,14 +749,12 @@ input, select, textarea {
   padding: 3rem 1.5rem 2rem;
   gap: 2rem;
   flex: 1;
-  /* FIX: prevent overflow on any viewport */
   min-width: 0;
 }
 
 .hero-content {
   flex: 0 0 55%;
   max-width: 55%;
-  /* FIX: prevent content from overflowing its column */
   min-width: 0;
 }
 
@@ -778,7 +775,6 @@ input, select, textarea {
   animation: fadeUp .8s .4s ease both;
 }
 
-/* Hero text */
 .hero-eyebrow {
   display: inline-flex;
   align-items: center;
@@ -832,8 +828,6 @@ input, select, textarea {
 
 /* ============================================================
    SEARCH BOX
-   FIX: Rebuilt grid so all fields have equal height and
-   labels/placeholders are never clipped.
 ============================================================ */
 .search-glass {
   width: 100%;
@@ -872,15 +866,6 @@ input, select, textarea {
 .stab.active { background: var(--grad-gold); color: #1A1206; }
 .stab:not(.active):hover { border-color: var(--glass-edge); color: var(--text-1); }
 
-/*
-  FIX: Desktop search grid
-  - All sfield inputs and the select get identical height (46px)
-  - "From" and "To" share equal width (1fr each)
-  - Swap button is a fixed 42px column
-  - Depart gets 1.4fr, Passengers gets 1.4fr
-  - Search button is auto width
-  - align-items:end so every element bottom-aligns with label above
-*/
 .search-fields {
   display: grid;
   grid-template-columns: 1fr 42px 1fr 1.2fr 1.4fr auto;
@@ -892,7 +877,7 @@ input, select, textarea {
   display: flex;
   flex-direction: column;
   gap: .4rem;
-  min-width: 0; /* FIX: prevent overflow */
+  min-width: 0;
 }
 
 .sfield label {
@@ -904,15 +889,9 @@ input, select, textarea {
   display: flex;
   align-items: center;
   gap: 5px;
-  white-space: nowrap; /* FIX: prevent label wrap/clip */
+  white-space: nowrap;
 }
 
-/*
-  FIX: Unified input/select styles
-  - height:46px ensures every field is the same height
-  - min-width:0 prevents overflow
-  - overflow:hidden + text-overflow:ellipsis for long placeholders
-*/
 .sfield input,
 .sfield select {
   height: 46px;
@@ -926,7 +905,6 @@ input, select, textarea {
   transition: border-color var(--t-fast), box-shadow var(--t-fast);
   width: 100%;
   min-width: 0;
-  /* FIX: show ellipsis when placeholder is too long */
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -949,7 +927,6 @@ input, select, textarea {
 .sfield input::placeholder { color: var(--text-3); opacity: 1; }
 .sfield select option { background: var(--sky-card); color: var(--text-1); }
 
-/* FIX: Date input — show placeholder colour until filled */
 .sfield input[type="date"] {
   color: var(--text-3);
   -webkit-text-fill-color: var(--text-3);
@@ -969,7 +946,6 @@ input, select, textarea {
   filter: none;
 }
 
-/* FIX: Swap button — same height as inputs */
 .swap-cities {
   width: 42px;
   height: 46px;
@@ -992,7 +968,6 @@ input, select, textarea {
   transform: rotate(180deg);
 }
 
-/* FIX: Search button — same height as inputs, aligned to bottom */
 .btn-search {
   display: flex;
   align-items: center;
@@ -1017,7 +992,8 @@ input, select, textarea {
 }
 
 /* Results / saved panels */
-.results-panel, .saved-panel {
+.results-panel,
+.saved-panel {
   margin-top: 1rem;
   background: var(--glass);
   backdrop-filter: blur(24px);
@@ -1035,7 +1011,8 @@ input, select, textarea {
   gap: .5rem;
 }
 
-.results-header h3, .saved-title {
+.results-header h3,
+.saved-title {
   font-family: var(--font-display);
   font-style: italic;
   font-size: 1.35rem;
@@ -1574,9 +1551,158 @@ input, select, textarea {
 .back-to-top:hover { transform: translateY(-4px); }
 
 /* ============================================================
+   MY BOOKINGS CARD
+============================================================ */
+.booking-card {
+  background: var(--sky-card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow-card);
+  transition: .3s ease;
+}
+
+.booking-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--gold);
+}
+
+.booking-route {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.booking-city {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-1);
+}
+
+.booking-arrow {
+  font-size: 1.4rem;
+  color: var(--gold);
+}
+
+.booking-info {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: .8rem;
+  margin-top: .8rem;
+}
+
+.booking-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.booking-label {
+  font-size: .75rem;
+  color: var(--text-2);
+}
+
+.booking-value {
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+.booking-status {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: .35rem .8rem;
+  border-radius: 999px;
+  background: #FFD54A22;
+  color: #FFD54A;
+  font-size: .82rem;
+  font-weight: 600;
+}
+
+/* ============================================================
+   BOOKING ACTIONS
+============================================================ */
+.booking-actions {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.cancel-booking-btn {
+  background: #e63946;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: .3s;
+}
+
+.cancel-booking-btn:hover {
+  background: #c1121f;
+  transform: translateY(-2px);
+}
+
+/* ============================================================
+   PASSENGER DETAILS MODAL
+   FIX: Selector updated from ".modal-content.passenger-modal"
+   (which matched the old invalid .modal/.modal-content classes)
+   to ".modal-box.passenger-modal" to match the corrected HTML.
+============================================================ */
+.modal-box.passenger-modal {
+  width: min(500px, 92%);
+  max-width: min(500px, 92%);
+}
+
+.passenger-modal h2 {
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: var(--text-1);
+}
+
+#passengerForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+#passengerForm .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: .45rem;
+}
+
+#passengerForm label {
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--text-2);
+}
+
+#passengerForm input {
+  width: 100%;
+  padding: .85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--glass);
+  color: var(--text-1);
+  font-size: .95rem;
+  transition: .25s ease;
+}
+
+#passengerForm input:focus {
+  border-color: var(--gold);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255,213,74,.15);
+}
+
+#passengerForm .btn-primary {
+  margin-top: 1rem;
+  width: 100%;
+}
+
+/* ============================================================
    RESPONSIVE BREAKPOINTS
-   All breakpoints consolidated and ordered largest → smallest.
-   Duplicate/conflicting rules removed.
+   Ordered largest → smallest. No duplicates.
 ============================================================ */
 
 /* ── Large Desktop 1600px+ ── */
@@ -1589,20 +1715,13 @@ input, select, textarea {
 @media (max-width: 1280px) {
   .hero-content { flex: 0 0 58%; max-width: 58%; }
   .hero-title { font-size: clamp(2.8rem,4.5vw,4.8rem); }
-  /*
-    FIX: Tighten search grid columns so nothing clips on
-    ~1024–1280 viewports that are narrower than full desktop.
-  */
-  .search-fields {
-    grid-template-columns: 1fr 42px 1fr 1fr 1.2fr auto;
-  }
+  .search-fields { grid-template-columns: 1fr 42px 1fr 1fr 1.2fr auto; }
 }
 
 /* ── Tablet Landscape 900–1024px ── */
 @media (max-width: 1024px) {
   .container { padding: 0 1.25rem; }
 
-  /* Hero: stack vertically, centre everything */
   .hero-body {
     flex-direction: column;
     align-items: center;
@@ -1632,7 +1751,6 @@ input, select, textarea {
 
   .search-glass { width: 100%; max-width: 860px; }
 
-  /* Search: two-column grid at this size */
   .search-fields {
     grid-template-columns: 1fr 1fr;
     gap: .85rem;
@@ -1640,17 +1758,16 @@ input, select, textarea {
 
   .swap-cities { display: none; }
 
-  /* Search button spans full width */
   .btn-search {
     grid-column: 1 / -1;
     width: 100%;
     justify-content: center;
   }
 
-  /* Return field — when visible, own row */
   #return-field { grid-column: auto; }
 
-  .results-panel, .saved-panel { max-width: 860px; }
+  .results-panel,
+  .saved-panel { max-width: 860px; }
 
   .dest-grid { grid-template-columns: repeat(2,1fr); }
   .why-grid  { grid-template-columns: repeat(2,1fr); }
@@ -1671,24 +1788,16 @@ input, select, textarea {
   .section { padding: 4rem 0; }
   .section-head { margin-bottom: 2.5rem; }
 
-  /* ── NAV ──
-     FIX: Mobile menu uses fixed positioning anchored below
-     navbar so it never overlaps the bar or clips content.
-     It is also fully within the viewport.
-  */
   .nav-inner {
     padding: 0 1rem;
     gap: .5rem;
   }
 
   .nav-links {
-    /* FIX: Use fixed so the menu isn't constrained by any
-       parent's overflow, and always sits below the navbar */
     position: fixed;
     top: var(--nav-h);
     left: 0;
     right: 0;
-    /* FIX: cap height so it never extends off-screen */
     max-height: calc(100dvh - var(--nav-h));
     overflow-y: auto;
     flex-direction: column;
@@ -1700,13 +1809,10 @@ input, select, textarea {
     backdrop-filter: blur(22px);
     -webkit-backdrop-filter: blur(22px);
     border-bottom: 1px solid var(--border);
-    /* FIX: slide up off-screen, not just translateY which could
-       cause overlap artifacts in some browsers */
     transform: translateY(-110%);
     opacity: 0;
     transition: transform var(--t-slow), opacity var(--t-mid);
     z-index: 999;
-    /* FIX: prevent horizontal scroll inside menu */
     width: 100%;
     box-sizing: border-box;
   }
@@ -1715,15 +1821,12 @@ input, select, textarea {
     background: rgba(238,243,252,.97);
   }
 
-  /* FIX: When open, slide in and show */
   .nav-links.open {
     transform: translateY(0);
     opacity: 1;
   }
 
-  .nav-links li {
-    width: 100%;
-  }
+  .nav-links li { width: 100%; }
 
   .nav-link {
     display: block;
@@ -1731,7 +1834,6 @@ input, select, textarea {
     padding: .85rem 1rem;
     border-radius: .5rem;
     font-size: 1rem;
-    /* FIX: no underline pseudo-element on mobile */
   }
 
   .nav-link::after { display: none; }
@@ -1741,7 +1843,6 @@ input, select, textarea {
     flex-shrink: 0;
   }
 
-  /* FIX: Sign-in always visible with text on mobile */
   .btn-signin {
     padding: .5rem .9rem;
     font-size: .8rem;
@@ -1751,14 +1852,12 @@ input, select, textarea {
 
   .btn-signin span { display: inline; }
 
-  /* FIX: Slightly smaller theme toggle on mobile */
   .theme-toggle {
     width: 36px;
     height: 36px;
     font-size: .95rem;
   }
 
-  /* ── HERO ── */
   .hero {
     min-height: auto;
     padding-top: var(--nav-h);
@@ -1783,7 +1882,6 @@ input, select, textarea {
     align-items: center;
   }
 
-  /* FIX: airplane below search form, centred, fully visible */
   .hero-image-wrap {
     order: 2;
     width: 100%;
@@ -1807,7 +1905,6 @@ input, select, textarea {
   .hero-sub { font-size: .98rem; margin: 0 auto 1.5rem; }
   .hero-cta { justify-content: center; }
 
-  /* ── SEARCH (single column on mobile) ── */
   .search-glass { padding: 1.25rem; width: 100%; }
 
   .search-fields {
@@ -1815,7 +1912,6 @@ input, select, textarea {
     gap: .75rem;
   }
 
-  /* FIX: all grid helpers reset for single-column */
   .swap-cities { display: none; }
 
   .btn-search {
@@ -1833,7 +1929,6 @@ input, select, textarea {
     gap: .4rem;
   }
 
-  /* ── HERO STATS ── */
   .hero-stats { padding: 1.5rem 1.25rem 2rem; }
   .hero-stats-inner { border-radius: 1.2rem; padding: 1.25rem 1rem; }
   .hstat { padding: 0 .75rem; }
@@ -1841,7 +1936,6 @@ input, select, textarea {
   .hstat span { font-size: .65rem; }
   .hstat-divider { height: 32px; }
 
-  /* ── GRIDS ── */
   .dest-grid { grid-template-columns: 1fr; }
   .why-grid  { grid-template-columns: 1fr; }
   .pkg-grid  { grid-template-columns: 1fr; }
@@ -1896,7 +1990,6 @@ input, select, textarea {
   .flight-card { flex-direction: column; align-items: flex-start; }
   .flight-info { gap: .75rem; }
   .flight-price-col {
-    align-items: flex-start;
     width: 100%;
     flex-direction: row;
     justify-content: space-between;
@@ -1904,7 +1997,8 @@ input, select, textarea {
   }
 
   .saved-card { align-items: flex-start; }
-  .results-panel, .saved-panel { padding: 1rem; }
+  .results-panel,
+  .saved-panel { padding: 1rem; }
   .section-title { font-size: 2.1rem; }
   .modal-overlay { padding: .5rem; }
   .modal-box { padding: 1.75rem 1.25rem 1.25rem; border-radius: 1.1rem; }
@@ -1922,10 +2016,7 @@ input, select, textarea {
   .hero-image-wrap { max-width: 220px; }
   .hero-image { max-width: 220px; }
   .hstat strong { font-size: 1.15rem; }
-  /* FIX: At 360px hide the least essential dividers to fit */
   .hstat-divider:last-of-type { display: none; }
-
-  /* FIX: icon-only sign in at very small sizes */
   .btn-signin span { display: none; }
   .btn-signin { padding: .5rem; width: 36px; height: 36px; border-radius: 50%; gap: 0; }
 }
@@ -1975,102 +2066,4 @@ input, select, textarea {
 
   [data-reveal] { opacity: 1 !important; transform: none !important; }
   .hero-plane { display: none; }
-}
-/* ============================================================
-   MY BOOKINGS CARD
-============================================================ */
-
-.booking-card{
-  background: var(--sky-card);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 1.2rem;
-  margin-bottom: 1rem;
-  box-shadow: var(--shadow-card);
-  transition: .3s ease;
-}
-
-.booking-card:hover{
-  transform: translateY(-3px);
-  border-color: var(--gold);
-}
-
-.booking-route{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:1rem;
-}
-
-.booking-city{
-  font-size:1.15rem;
-  font-weight:700;
-  color:var(--text-1);
-}
-
-.booking-arrow{
-  font-size:1.4rem;
-  color:var(--gold);
-}
-
-.booking-info{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:.8rem;
-  margin-top:.8rem;
-}
-
-.booking-item{
-  display:flex;
-  flex-direction:column;
-}
-
-.booking-label{
-  font-size:.75rem;
-  color:var(--text-2);
-}
-
-.booking-value{
-  font-weight:600;
-  color:var(--text-1);
-}
-
-.booking-status{
-  display:inline-block;
-  margin-top:1rem;
-  padding:.35rem .8rem;
-  border-radius:999px;
-  background:#FFD54A22;
-  color:#FFD54A;
-  font-size:.82rem;
-  font-weight:600;
-}
-.modal-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:1.5rem;
-}/* ===========================
-   BOOKING ACTIONS
-=========================== */
-
-.booking-actions{
-    margin-top:20px;
-    text-align:right;
-}
-
-.cancel-booking-btn{
-    background:#e63946;
-    color:#fff;
-    border:none;
-    padding:10px 18px;
-    border-radius:10px;
-    cursor:pointer;
-    font-weight:600;
-    transition:.3s;
-}
-
-.cancel-booking-btn:hover{
-    background:#c1121f;
-    transform:translateY(-2px);
 }

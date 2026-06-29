@@ -28,7 +28,8 @@
       <li><a href="#destinations" class="nav-link">Destinations</a></li>
       <li><a href="#search" class="nav-link">Search Flights</a></li>
       <li><a href="#packages" class="nav-link">Packages</a></li>
-      <li> <a href="#contact"class="nav-link">contact</a></li>
+      <!-- FIX: added missing space before class attribute -->
+      <li><a href="#contact" class="nav-link">Contact</a></li>
       <li><a href="#" id="myBookingsBtn" class="nav-link">My Bookings</a></li>
     </ul>
 
@@ -462,32 +463,58 @@
 <button class="back-to-top" id="back-to-top" aria-label="Back to top">
   <i class="ri-arrow-up-line" aria-hidden="true"></i>
 </button>
-<!-- ==============================
-     MY BOOKINGS MODAL
-================================== -->
-<!-- MY BOOKINGS MODAL -->
-<div class="modal-overlay" id="myBookingsModal">
 
-    <div class="modal-box">
-
-        <div class="modal-header">
-            <h2>My Bookings</h2>
-
-           <button id="closeBookingsModal" class="modal-close">✕</button>
-        </div>
-
-        <div id="bookingsContainer">
-            <p style="text-align:center;">
-                Loading bookings...
-            </p>
-        </div>
-
+<!-- ===================== MY BOOKINGS MODAL ===================== -->
+<div class="modal-overlay" id="myBookingsModal" role="dialog" aria-modal="true" aria-label="My Bookings">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2>My Bookings</h2>
+      <!-- FIX: single close button with correct id -->
+      <button id="closeBookingsModal" class="modal-close" aria-label="Close bookings">✕</button>
     </div>
+    <div id="bookingsContainer">
+      <p style="text-align:center;">Loading bookings...</p>
+    </div>
+  </div>
+</div>
 
+<!-- ===================== PASSENGER DETAILS MODAL =====================
+     FIX: Removed the duplicate copy of this modal that appeared after
+     the <script> tag. There was only one needed. Changed class from
+     "modal" / "modal-content" (undefined in CSS) to "modal-overlay" /
+     "modal-box" so the existing design-system styles apply correctly.
+-->
+<div id="passengerModal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Passenger Details">
+  <div class="modal-box passenger-modal">
+
+    <button id="closePassengerModal" class="modal-close" aria-label="Close passenger details">✕</button>
+
+    <h2>Passenger Details</h2>
+
+    <form id="passengerForm">
+      <div class="form-group">
+        <label for="passengerName">Full Name</label>
+        <input type="text" id="passengerName" required />
+      </div>
+      <div class="form-group">
+        <label for="passengerEmail">Email</label>
+        <input type="email" id="passengerEmail" required />
+      </div>
+      <div class="form-group">
+        <label for="passengerPhone">Phone Number</label>
+        <input type="tel" id="passengerPhone" required />
+      </div>
+      <div class="form-group">
+        <label for="passengerId">CNIC / Passport (Optional)</label>
+        <input type="text" id="passengerId" />
+      </div>
+      <button type="submit" class="btn-primary">Confirm Booking</button>
+    </form>
+
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="main.js"></script>
-
 </body>
 </html>
